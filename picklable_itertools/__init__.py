@@ -2,6 +2,32 @@ import six
 import collections
 
 
+def _iter(obj):
+    """A custom replacement for iter(), dispatching a few custom picklable
+    iterators for known types.
+    """
+    if six.PY2 and isinstance(obj, (list, tuple)):
+        return ordered_sequence_iterator(obj)
+    else:
+        return iter(obj)
+
+
+class ordered_sequence_iterator(six.Iterator):
+    """A picklable replacement for list and tuple iterators."""
+    def __init__(self, sequence):
+        self._sequence = sequence
+        self._position = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._position < len(self._sequence):
+            return self._sequence[self._position]
+        else:
+            raise StopIteration
+
+
 class repeat(six.Iterator):
     """
     repeat(object [,times]) -> create an iterator which returns the object
@@ -44,7 +70,7 @@ class chain(six.Iterator):
             return next(self._current)
         except StopIteration:
             try:
-                self._current = iter(self._iterables.popleft())
+                self._current = _iter(self._iterables.popleft())
             except IndexError:
                 raise StopIteration
         return next(self)
