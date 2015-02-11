@@ -1,10 +1,12 @@
 import functools
 import itertools
 import six
+import tempfile
+from six.moves import cPickle
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
-    ordered_sequence_iterator, zip_longest
+    file_iterator, ordered_sequence_iterator, zip_longest, _iter
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -49,6 +51,26 @@ def test_ordered_sequence_iterator():
     yield verify_same, ordered_sequence_iterator, iter, None, ()
     yield verify_same, ordered_sequence_iterator, iter, None, [5, 2]
     yield verify_same, ordered_sequence_iterator, iter, None, ("D", "X", "J")
+
+
+def _create_test_file():
+    f = tempfile.NamedTemporaryFile()
+    f.write("\n".join(map(str, range(4))))
+    f.flush()
+    return f
+
+
+def test_file_iterator():
+    f = _create_test_file()
+    assert list(file_iterator(open(f.name))) == list(iter(open(f.name)))
+
+
+def test_file_iterator_pickling():
+    f = _create_test_file()
+    it = _iter(open(f.name))
+    last = [next(it) for _ in range(2)][-1]
+    first = next(cPickle.loads(cPickle.dumps(it)))
+    assert int(first) == int(last) + 1
 
 
 def test_repeat():
