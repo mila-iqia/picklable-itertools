@@ -78,6 +78,31 @@ class chain(six.Iterator):
         return next(self)
 
 
+class compress(six.Iterator):
+    """compress(data, selectors) --> iterator over selected data
+
+    Return data elements corresponding to true selector elements.
+    Forms a shorter iterator from selected data elements using the
+    selectors to choose the data elements.
+    """
+    def __init__(self, data, selectors):
+        self._data = _iter(data)
+        self._selectors = _iter(selectors)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        # We terminate on the shortest input sequence, so leave
+        # StopIteration uncaught here.
+        data = next(self._data)
+        selector = next(self._selectors)
+        while not bool(selector):
+            data = next(self._data)
+            selector = next(self._selectors)
+        return data
+
+
 class count(six.Iterator):
     """count(start=0, step=1) --> count object
 
