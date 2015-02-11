@@ -76,3 +76,21 @@ class chain(six.Iterator):
             except IndexError:
                 raise StopIteration
         return next(self)
+
+
+class count(six.Iterator):
+    """count(start=0, step=1) --> count object
+
+    Return a count object whose .__next__() method returns consecutive values.
+    """
+    def __init__(self, start=0, step=1):
+        self._n = start
+        self._step = step
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        n = self._n
+        self._n += self._step
+        return n

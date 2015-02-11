@@ -1,14 +1,15 @@
 import itertools
-from picklable_itertools import repeat, chain, ordered_sequence_iterator
+from picklable_itertools import repeat, chain, count, ordered_sequence_iterator
 
 
-def verify_same(picklable_version, reference_version, *args, **kwargs):
+def verify_same(picklable_version, reference_version, n, *args, **kwargs):
     """Take a reference version from itertools, verify the same operation
     in our version.
     """
     expected = reference_version(*args, **kwargs)
     actual = picklable_version(*args, **kwargs)
-    while True:
+    done = 0
+    while done != n:
         try:
             expected_val = next(expected)
         except StopIteration:
@@ -20,6 +21,7 @@ def verify_same(picklable_version, reference_version, *args, **kwargs):
             assert False, "prematurely exhausted; expected {}".format(
                 str(expected_val))
         assert expected_val == actual_val
+        done += 1
 
 
 def check_stops(it):
@@ -32,20 +34,27 @@ def check_stops(it):
 
 
 def test_ordered_sequence_iterator():
-    yield verify_same, ordered_sequence_iterator, iter, []
-    yield verify_same, ordered_sequence_iterator, iter, ()
-    yield verify_same, ordered_sequence_iterator, iter, [5, 2]
-    yield verify_same, ordered_sequence_iterator, iter, ("Matt", "Mark", "Luke")
+    yield verify_same, ordered_sequence_iterator, iter, None, []
+    yield verify_same, ordered_sequence_iterator, iter, None, ()
+    yield verify_same, ordered_sequence_iterator, iter, None, [5, 2]
+    yield verify_same, ordered_sequence_iterator, iter, None, ("D", "X", "J")
 
 
 def test_repeat():
-    yield verify_same, repeat, itertools.repeat, 5, 0
-    yield verify_same, repeat, itertools.repeat, 'abc', 5
-    yield verify_same, repeat, itertools.repeat, 'def', 3
+    yield verify_same, repeat, itertools.repeat, None, 5, 0
+    yield verify_same, repeat, itertools.repeat, None, 'abc', 5
+    yield verify_same, repeat, itertools.repeat, None, 'def', 3
 
 
 def test_chain():
-    yield verify_same, chain, itertools.chain, [5, 4], [3], [9, 10]
-    yield verify_same, chain, itertools.chain, [3, 1], [], ['x', 'y']
-    yield verify_same, chain, itertools.chain, [], [], []
-    yield verify_same, chain, itertools.chain
+    yield verify_same, chain, itertools.chain, None, [5, 4], [3], [9, 10]
+    yield verify_same, chain, itertools.chain, None, [3, 1], [], ['x', 'y']
+    yield verify_same, chain, itertools.chain, None, [], [], []
+    yield verify_same, chain, itertools.chain, None
+
+
+def test_count():
+    yield verify_same, count, itertools.count, 6
+    yield verify_same, count, itertools.count, 20, 2
+    yield verify_same, count, itertools.count, 10, 5, 9
+    yield verify_same, count, itertools.count, 30, 3, 10
