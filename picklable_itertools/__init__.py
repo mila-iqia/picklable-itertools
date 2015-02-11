@@ -2,6 +2,8 @@ from abc import ABCMeta, abstractmethod
 import six
 import collections
 
+from picklable_itertools.version import __version__
+
 
 @six.add_metaclass(ABCMeta)
 class BaseItertool(six.Iterator):
