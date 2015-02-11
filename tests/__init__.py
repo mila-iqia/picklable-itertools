@@ -1,12 +1,14 @@
+import functools
 import itertools
 import six
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
-    ordered_sequence_iterator
+    ordered_sequence_iterator, zip_longest
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
+_zip_longest = itertools.zip_longest if six.PY3 else itertools.izip_longest
 _filter = filter if six.PY3 else itertools.ifilter
 _filterfalse = itertools.filterfalse if six.PY3 else itertools.ifilterfalse
 
@@ -117,3 +119,18 @@ def test_ifilterfalse():
            lambda x: x < 3, [])
     yield (verify_same, ifilterfalse, _filterfalse, None,
            None, [0, 3, 0, 0, 1])
+
+
+def test_zip_longest():
+    yield (verify_same, zip_longest, _zip_longest, None, [], [])
+    yield (verify_same, zip_longest, _zip_longest, None, [], [5, 4])
+    yield (verify_same, zip_longest, _zip_longest, None, [2], [5, 4])
+    yield (verify_same, zip_longest, _zip_longest, None, [7, 9], [5, 4])
+    yield (verify_same, zip_longest, _zip_longest, None, [7, 9],
+           [4], [2, 9, 3])
+    yield (verify_same, zip_longest, _zip_longest, None, [7, 9], [4], [])
+    yield (verify_same, zip_longest, _zip_longest, None, [7], [4], [],
+           [5, 9])
+    yield (verify_same, functools.partial(zip_longest, fillvalue=-1),
+           functools.partial(_zip_longest, fillvalue=-1),
+           [7], [4], [], [5, 9])

@@ -210,3 +210,31 @@ class ifilterfalse(ifilter):
 
     def _negated(self, argument):
         return not self._true_predicate(argument)
+
+
+class zip_longest(BaseItertool):
+    def __init__(self, *iterables, **kwargs):
+        if 'fillvalue' in kwargs:
+            self._fillvalue = kwargs['fillvalue']
+            del kwargs['fillvalue']
+        else:
+            self._fillvalue = None
+        if len(kwargs) > 0:
+            raise ValueError("Unrecognized keyword arguments: {}".format(
+                ", ".join(kwargs)))
+
+        self._iterables = [_iter(it) for it in iterables]
+
+    def __next__(self):
+        found_any = False
+        result = []
+        for it in self._iterables:
+            try:
+                result.append(next(it))
+                found_any = True
+            except StopIteration:
+                result.append(self._fillvalue)
+        if found_any:
+            return tuple(result)
+        else:
+            raise StopIteration
