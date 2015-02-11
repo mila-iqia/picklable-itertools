@@ -190,7 +190,7 @@ class ifilter(six.Iterator):
     is true. If function is None, return the items that are true.
     """
     def __init__(self, predicate, iterable):
-        self._predicate = predicate
+        self._predicate = predicate if predicate is not None else bool
         self._iterable = _iter(iterable)
 
     def __iter__(self):
@@ -203,3 +203,17 @@ class ifilter(six.Iterator):
             val = next(self._iterable)
             print("val", val)
         return val
+
+
+class ifilterfalse(ifilter):
+    """ifilterfalse(function or None, sequence) --> ifilterfalse object
+
+    Return those items of sequence for which function(item) is false.
+    If function is None, return the items that are false.
+    """
+    def __init__(self, predicate, iterable):
+        self._true_predicate = predicate
+        super(ifilterfalse, self).__init__(self._negated, iterable)
+
+    def _negated(self, argument):
+        return not self._true_predicate(argument)

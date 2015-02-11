@@ -2,12 +2,13 @@ import itertools
 import six
 
 from picklable_itertools import (
-    repeat, chain, compress, count, cycle, ifilter, imap, izip,
+    repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     ordered_sequence_iterator
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
 _filter = filter if six.PY3 else itertools.ifilter
+_filterfalse = itertools.filterfalse if six.PY3 else itertools.ifilterfalse
 
 
 def verify_same(picklable_version, reference_version, n, *args, **kwargs):
@@ -104,3 +105,15 @@ def test_ifilter():
     yield verify_same, ifilter, _filter, None, lambda x: x >= 4, [3, 4, 5]
     yield verify_same, ifilter, _filter, None, lambda x: x >= 6, [3, 4, 5]
     yield verify_same, ifilter, _filter, None, lambda x: x < 3, []
+    yield verify_same, ifilter, _filter, None, None, [0, 3, 0, 0, 1]
+
+
+def test_ifilterfalse():
+    yield (verify_same, ifilterfalse, _filterfalse, None,
+           lambda x: x >= 4, [3, 4, 5])
+    yield (verify_same, ifilterfalse, _filterfalse, None,
+           lambda x: x >= 6, [3, 4, 5])
+    yield (verify_same, ifilterfalse, _filterfalse, None,
+           lambda x: x < 3, [])
+    yield (verify_same, ifilterfalse, _filterfalse, None,
+           None, [0, 3, 0, 0, 1])
