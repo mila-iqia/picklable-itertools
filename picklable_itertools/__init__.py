@@ -283,8 +283,11 @@ class islice(BaseItertool):
         self._iterable = _iter(iterable)
         i = 0
         while i < start:
-            next(self._iterable)
-            i += 1
+            try:
+                next(self._iterable)
+                i += 1
+            except StopIteration:
+                break
 
         self._stop = stop - start
         self._step = step

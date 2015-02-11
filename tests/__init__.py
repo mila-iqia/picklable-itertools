@@ -175,3 +175,5 @@ def test_islice():
     yield (verify_same, islice, _islice, None, [1, 2, 3], 0, 3, 2)
     yield (verify_same, islice, _islice, None, [1, 2, 3, 4, 5], 1, 4, 3)
     yield (verify_same, islice, _islice, None, [1, 2, 3, 4, 5], -2, 9, 4)
+    yield (verify_same, islice, _islice, None, [1, 2, 3], 4, 9)
+    yield (verify_same, islice, _islice, None, [1, 2, 3], 0, 9, 5)
