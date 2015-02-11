@@ -54,7 +54,7 @@ def test_ordered_sequence_iterator():
 
 
 def _create_test_file():
-    f = tempfile.NamedTemporaryFile()
+    f = tempfile.NamedTemporaryFile(mode='w')
     f.write("\n".join(map(str, range(4))))
     f.flush()
     return f
