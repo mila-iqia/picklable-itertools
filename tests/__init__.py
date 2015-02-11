@@ -43,6 +43,22 @@ def verify_same(picklable_version, reference_version, n, *args, **kwargs):
         done += 1
 
 
+def verify_pickle(picklable_version, reference_version, n, m, *args, **kwargs):
+    """Take n steps, pickle at m < n, and make sure it continues the same."""
+    expected = reference_version(*args, **kwargs)
+    actual = picklable_version(*args, **kwargs)
+    done = 0
+    if not m < n:
+        raise ValueError("Test only makes sense with m < n")
+    while done != n:
+        expected_val = next(expected)
+        actual_val = next(actual)
+        assert expected_val == actual_val
+        if done == m:
+            actual = cPickle.loads(cPickle.dumps(actual))
+        done += 1
+
+
 def check_stops(it):
     """Verify that an exhausted iterator yields StopIteration."""
     try:
@@ -163,6 +179,9 @@ def test_zip_longest():
            functools.partial(_zip_longest, fillvalue=-1),
            [7], [4], [], [5, 9])
 
+    yield (verify_pickle, zip_longest, _zip_longest, 3, 2, [7, 9, 8], [1, 2])
+    yield (verify_pickle, zip_longest, _zip_longest, 3, 1, [7, 9, 8], [1, 2])
+
 
 def test_islice():
     yield (verify_same, islice, _islice, None, [], 0)
@@ -177,3 +196,5 @@ def test_islice():
     yield (verify_same, islice, _islice, None, [1, 2, 3, 4, 5], -2, 9, 4)
     yield (verify_same, islice, _islice, None, [1, 2, 3], 4, 9)
     yield (verify_same, islice, _islice, None, [1, 2, 3], 0, 9, 5)
+
+    yield (verify_pickle, islice, _islice, 3, 2, [1, 2, 3], 5)
