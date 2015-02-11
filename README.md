@@ -7,7 +7,7 @@ compatible.
 ## Why?
 * Because the standard library pickle module (nor the excellent
   [dill](https://github.com/uqfoundation/dill) package) can't serialize
-  generators, of which all the objects in `itertools` are instances.
+  all of the `itertools` iterators.
 * Because there are lots of instances where these things in `itertools` would
   simplify code, but can't be used because serializability must be maintained.
   Primarily [blocks](https://github.com/bartvm/blocks) is our first consumer.
@@ -17,8 +17,9 @@ compatible.
   against the standard library `itertools` or builtin implementation to
   verify behaviour matches.
 * _Handle built-in types gracefully if possible._ List iterators, etc.
-  are not picklable on Python 2.x, so we provide an alternative implementation.
-  set and dict iterators demand a bit more thought.
+  are not picklable on Python 2.x, so we provide an alternative
+  implementation. File iterators are handled transparently as well. set
+  and dict iterators demand a bit more thought.
 * _Premature optimization is the root of all evil._ These things are
   implemented in Python, so speed is obviously not our primary concern. Several
   of the more advanced iterators are constructed by chaining simpler iterators
