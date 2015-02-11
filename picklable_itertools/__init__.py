@@ -23,7 +23,9 @@ class ordered_sequence_iterator(six.Iterator):
 
     def __next__(self):
         if self._position < len(self._sequence):
-            return self._sequence[self._position]
+            value = self._sequence[self._position]
+            self._position += 1
+            return value
         else:
             raise StopIteration
 
