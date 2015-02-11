@@ -181,3 +181,25 @@ def izip(*iterables):
     is exhausted and then it raises StopIteration.
     """
     return imap(None, *iterables)
+
+
+class ifilter(six.Iterator):
+    """ifilter(function or None, iterable) --> ifilter object
+
+    Return an iterator yielding those items of iterable for which function(item)
+    is true. If function is None, return the items that are true.
+    """
+    def __init__(self, predicate, iterable):
+        self._predicate = predicate
+        self._iterable = _iter(iterable)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        val = next(self._iterable)
+        print("val", val)
+        while not self._predicate(val):
+            val = next(self._iterable)
+            print("val", val)
+        return val
