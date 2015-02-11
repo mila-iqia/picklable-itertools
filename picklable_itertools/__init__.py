@@ -276,7 +276,7 @@ class islice(BaseItertool):
             start, stop = 0, start
         if (not 0 <= start <= sys.maxsize or
                 not 0 <= stop <= sys.maxsize or
-                not 0 <= stop <= sys.maxsize):
+                not 0 <= step <= sys.maxsize):
             raise ValueError("Indices for islice() must be None or an "
                              "integer: 0 <= x <= maxint.")
 
