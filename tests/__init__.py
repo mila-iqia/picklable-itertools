@@ -1,5 +1,5 @@
 import itertools
-from picklable_itertools import repeat, chain, count, ordered_sequence_iterator
+from picklable_itertools import repeat, chain, count, cycle, ordered_sequence_iterator
 
 
 def verify_same(picklable_version, reference_version, n, *args, **kwargs):
@@ -58,3 +58,11 @@ def test_count():
     yield verify_same, count, itertools.count, 20, 2
     yield verify_same, count, itertools.count, 10, 5, 9
     yield verify_same, count, itertools.count, 30, 3, 10
+
+
+def test_cycle():
+    yield verify_same, cycle, itertools.cycle, 40, [4, 9, 10]
+    yield verify_same, cycle, itertools.cycle, 10, [4, 9, 20, 10]
+    yield verify_same, cycle, itertools.cycle, 20, [4, 9, 30, 10, 9]
+    yield verify_same, cycle, itertools.cycle, 60, [8, 4, 5, 4, 9, 10]
+    yield verify_same, cycle, itertools.cycle, None, []

@@ -94,3 +94,33 @@ class count(six.Iterator):
         n = self._n
         self._n += self._step
         return n
+
+
+class cycle(six.Iterator):
+    """cycle(iterable) --> cycle object
+
+    Return elements from the iterable until it is exhausted.
+    Then repeat the sequence indefinitely.
+    """
+    def __init__(self, iterable):
+        self._iterable = _iter(iterable)
+        self._exhausted = False
+        self._elements = collections.deque()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if not self._exhausted:
+            try:
+                value = next(self._iterable)
+            except StopIteration:
+                self._exhausted = True
+                return next(self)
+            self._elements.append(value)
+        else:
+            if len(self._elements) == 0:
+                raise StopIteration
+            value = self._elements.popleft()
+            self._elements.append(value)
+        return value
