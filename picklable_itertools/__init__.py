@@ -212,8 +212,9 @@ class ifilterfalse(ifilter):
     If function is None, return the items that are false.
     """
     def __init__(self, predicate, iterable):
-        self._true_predicate = predicate
-        super(ifilterfalse, self).__init__(self._negated, iterable)
+        super(ifilterfalse, self).__init__(predicate, iterable)
+        self._true_predicate = self._predicate
+        self._predicate = self._negated
 
     def _negated(self, argument):
         return not self._true_predicate(argument)
