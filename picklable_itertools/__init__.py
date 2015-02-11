@@ -1,5 +1,16 @@
+from abc import ABCMeta, abstractmethod
 import six
 import collections
+
+
+@six.add_metaclass(ABCMeta)
+class BaseItertool(six.Iterator):
+    def __iter__(self):
+        return self
+
+    @abstractmethod
+    def __next__(self):
+        pass
 
 
 def _iter(obj):
@@ -12,14 +23,11 @@ def _iter(obj):
         return iter(obj)
 
 
-class ordered_sequence_iterator(six.Iterator):
+class ordered_sequence_iterator(BaseItertool):
     """A picklable replacement for list and tuple iterators."""
     def __init__(self, sequence):
         self._sequence = sequence
         self._position = 0
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         if self._position < len(self._sequence):
@@ -30,7 +38,7 @@ class ordered_sequence_iterator(six.Iterator):
             raise StopIteration
 
 
-class repeat(six.Iterator):
+class repeat(BaseItertool):
     """
     repeat(object [,times]) -> create an iterator which returns the object
     for the specified number of times.  If not specified, returns the object
@@ -40,9 +48,6 @@ class repeat(six.Iterator):
         self._obj = obj
         self._times = times
         self._times_called = 0
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         if self._times is None:
@@ -55,7 +60,7 @@ class repeat(six.Iterator):
                 raise StopIteration
 
 
-class chain(six.Iterator):
+class chain(BaseItertool):
     """
     chain(*iterables) --> chain object
 
@@ -78,7 +83,7 @@ class chain(six.Iterator):
         return next(self)
 
 
-class compress(six.Iterator):
+class compress(BaseItertool):
     """compress(data, selectors) --> iterator over selected data
 
     Return data elements corresponding to true selector elements.
@@ -88,9 +93,6 @@ class compress(six.Iterator):
     def __init__(self, data, selectors):
         self._data = _iter(data)
         self._selectors = _iter(selectors)
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         # We terminate on the shortest input sequence, so leave
@@ -103,7 +105,7 @@ class compress(six.Iterator):
         return data
 
 
-class count(six.Iterator):
+class count(BaseItertool):
     """count(start=0, step=1) --> count object
 
     Return a count object whose .__next__() method returns consecutive values.
@@ -112,16 +114,13 @@ class count(six.Iterator):
         self._n = start
         self._step = step
 
-    def __iter__(self):
-        return self
-
     def __next__(self):
         n = self._n
         self._n += self._step
         return n
 
 
-class cycle(six.Iterator):
+class cycle(BaseItertool):
     """cycle(iterable) --> cycle object
 
     Return elements from the iterable until it is exhausted.
@@ -131,9 +130,6 @@ class cycle(six.Iterator):
         self._iterable = _iter(iterable)
         self._exhausted = False
         self._elements = collections.deque()
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         if not self._exhausted:
@@ -151,7 +147,7 @@ class cycle(six.Iterator):
         return value
 
 
-class imap(six.Iterator):
+class imap(BaseItertool):
     """imap(func, *iterables) --> imap object
 
     Make an iterator that computes the function using arguments from
@@ -160,9 +156,6 @@ class imap(six.Iterator):
     def __init__(self, function, *iterables):
         self._function = function
         self._iterables = tuple([_iter(it) for it in iterables])
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         args = tuple([next(it) for it in self._iterables])
@@ -183,7 +176,7 @@ def izip(*iterables):
     return imap(None, *iterables)
 
 
-class ifilter(six.Iterator):
+class ifilter(BaseItertool):
     """ifilter(function or None, iterable) --> ifilter object
 
     Return an iterator yielding those items of iterable for which function(item)
@@ -192,9 +185,6 @@ class ifilter(six.Iterator):
     def __init__(self, predicate, iterable):
         self._predicate = predicate if predicate is not None else bool
         self._iterable = _iter(iterable)
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         val = next(self._iterable)
