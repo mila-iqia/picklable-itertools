@@ -1,7 +1,10 @@
 import itertools
+import six
+
 from picklable_itertools import (
-    repeat, chain, compress, count, cycle, ordered_sequence_iterator
+    repeat, chain, compress, count, cycle, imap, ordered_sequence_iterator
 )
+_map = map if six.PY3 else itertools.imap
 
 
 def verify_same(picklable_version, reference_version, n, *args, **kwargs):
@@ -78,3 +81,10 @@ def test_cycle():
     yield verify_same, cycle, itertools.cycle, 20, [4, 9, 30, 10, 9]
     yield verify_same, cycle, itertools.cycle, 60, [8, 4, 5, 4, 9, 10]
     yield verify_same, cycle, itertools.cycle, None, []
+
+
+def test_imap():
+    yield verify_same, imap, _map, None, lambda x: x + 2, [3, 4, 5]
+    yield verify_same, imap, _map, None, lambda x, y: x + y, [3, 4], [9, 2]
+    yield verify_same, imap, _map, None, lambda x, y: x + y, [3], [9, 2]
+    yield verify_same, imap, _map, None, lambda x, y: x + y, [3], [9, 2], []

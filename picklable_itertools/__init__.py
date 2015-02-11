@@ -149,3 +149,24 @@ class cycle(six.Iterator):
             value = self._elements.popleft()
             self._elements.append(value)
         return value
+
+
+class imap(six.Iterator):
+    """imap(func, *iterables) --> imap object
+
+    Make an iterator that computes the function using arguments from
+    each of the iterables.  Stops when the shortest iterable is exhausted.
+    """
+    def __init__(self, function, *iterables):
+        self._function = function
+        self._iterables = tuple([_iter(it) for it in iterables])
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        args = tuple([next(it) for it in self._iterables])
+        if self._function is None:
+            return args
+        else:
+            return self._function(*args)
