@@ -3,23 +3,29 @@ import itertools
 import six
 import tempfile
 from six.moves import cPickle
+from nose.tools import assert_raises
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
-    file_iterator, ordered_sequence_iterator, zip_longest, _iter
+    file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
 _zip_longest = itertools.zip_longest if six.PY3 else itertools.izip_longest
 _filter = filter if six.PY3 else itertools.ifilter
 _filterfalse = itertools.filterfalse if six.PY3 else itertools.ifilterfalse
+_islice = itertools.islice
 
 
 def verify_same(picklable_version, reference_version, n, *args, **kwargs):
     """Take a reference version from itertools, verify the same operation
     in our version.
     """
-    expected = reference_version(*args, **kwargs)
+    try:
+        expected = reference_version(*args, **kwargs)
+    except Exception as e:
+        assert_raises(e.__class__, picklable_version, *args, **kwargs)
+        return
     actual = picklable_version(*args, **kwargs)
     done = 0
     while done != n:
@@ -156,3 +162,16 @@ def test_zip_longest():
     yield (verify_same, functools.partial(zip_longest, fillvalue=-1),
            functools.partial(_zip_longest, fillvalue=-1),
            [7], [4], [], [5, 9])
+
+
+def test_islice():
+    yield (verify_same, islice, _islice, None, [], 0)
+    yield (verify_same, islice, _islice, None, [1], 0)
+    yield (verify_same, islice, _islice, None, [1], 1)
+    yield (verify_same, islice, _islice, None, [1], 3)
+    yield (verify_same, islice, _islice, None, [1, 2, 3], 5)
+    yield (verify_same, islice, _islice, None, [1, 2, 3], 1, 2)
+    yield (verify_same, islice, _islice, None, [1, 2, 3], 1, 5, 3)
+    yield (verify_same, islice, _islice, None, [1, 2, 3], 0, 3, 2)
+    yield (verify_same, islice, _islice, None, [1, 2, 3, 4, 5], 1, 4, 3)
+    yield (verify_same, islice, _islice, None, [1, 2, 3, 4, 5], -2, 9, 4)
