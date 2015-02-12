@@ -12,13 +12,22 @@ def _iter(obj):
         file_types = file,
     if six.PY3:
         file_types = io.IOBase,
+        dict_items = {}.items().__class__
+        dict_values = {}.values().__class__
+        dict_keys = {}.keys().__class__
+        dict_view = (dict_items, dict_values, dict_keys)
 
-    if six.PY2 and isinstance(obj, (list, tuple)):
-        return ordered_sequence_iterator(obj)
-    if six.PY2 and isinstance(obj, six.moves.xrange):
-        return range_iterator(obj)
+    if isinstance(obj, dict):
+        return ordered_sequence_iterator(list(obj.keys()))
     if isinstance(obj, file_types):
         return file_iterator(obj)
+    if six.PY2:
+        if isinstance(obj, (list, tuple)):
+            return ordered_sequence_iterator(obj)
+        if isinstance(obj, xrange):
+            return range_iterator(obj)
+    if six.PY3 and isinstance(obj, dict_view):
+        return ordered_sequence_iterator(list(obj))
     return iter(obj)
 
 

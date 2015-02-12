@@ -79,6 +79,19 @@ def test_ordered_sequence_iterator():
     yield verify_same, ordered_sequence_iterator, iter, None, ("D", "X", "J")
 
 
+def test_dict_iterator():
+    d = {'a': 'b', 1: 2}
+    assert list(_iter(d)) == list(iter(d))
+    assert list(_iter(d.items())) == list(iter(d.items()))
+    assert list(_iter(d.keys())) == list(iter(d.keys()))
+    assert list(_iter(d.values())) == list(iter(d.values()))
+
+    yield verify_pickle, _iter, iter, 2, 1, d
+    yield verify_pickle, _iter, iter, 2, 1, d.items()
+    yield verify_pickle, _iter, iter, 2, 1, d.values()
+    yield verify_pickle, _iter, iter, 2, 1, d.keys()
+
+
 def test_range_iterator():
     yield verify_same, range_iterator, iter, None, xrange(5)
     yield verify_same, range_iterator, iter, None, xrange(2, 5)
