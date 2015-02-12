@@ -194,6 +194,18 @@ def test_product():
     yield verify_same, product, itertools.product, None, [], [5], []
     yield verify_same, product, itertools.product, None, [2, 5], [3, 5, 9]
     yield verify_same, product, itertools.product, None, [2, 5], [1], [3, 5, 9]
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [1, 2, 3])
+    yield (verify_same, functools.partial(product, repeat=4),
+           functools.partial(itertools.product, repeat=4), None, [1], [1, 2])
+    yield (verify_same, functools.partial(product, repeat=2),
+           functools.partial(itertools.product, repeat=2), None, [3, 1], [1])
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [])
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [], [3])
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [1], [])
 
 
 def test_zip_longest():

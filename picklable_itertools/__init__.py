@@ -9,7 +9,8 @@ from .iter_dispatch import (
     _iter, ordered_sequence_iterator, file_iterator, range_iterator
     )
 from .tee import tee_manager
-
+_zip = zip
+_map = map
 
 try:
     DIST = get_distribution('picklable_itertools')
@@ -194,11 +195,22 @@ class ifilterfalse(ifilter):
 
 
 class product(BaseItertool):
-    def __init__(self, *iterables):
-        self._iterables = [_iter(it) for it in iterables]
-        self._contents = [[] for it in iterables]
-        self._exhausted = [False for it in iterables]
-        self._position = [-1 for it in iterables]
+    def __init__(self, *args, **kwargs):
+        if 'repeat' in kwargs:
+            repeat = kwargs['repeat']
+            del kwargs['repeat']
+        else:
+            repeat = None
+        if len(kwargs) > 0:
+            raise ValueError("Unrecognized keyword arguments: {}".format(
+                ", ".join(kwargs)))
+        if repeat is not None:
+            self._iterables = sum(_zip(*(tee(it, repeat) for it in args)), ())
+        else:
+            self._iterables = [_iter(it) for it in args]
+        self._contents = [[] for it in self._iterables]
+        self._exhausted = [False for it in self._iterables]
+        self._position = [-1 for it in self._iterables]
         self._initialized = False
 
     def __next__(self):
