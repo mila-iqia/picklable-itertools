@@ -5,6 +5,7 @@ import sys
 from pkg_resources import get_distribution, DistributionNotFound
 
 from .base import BaseItertool
+from .filter import ifilter, ifilterfalse, dropwhile, takewhile
 from .iter_dispatch import (
     _iter, ordered_sequence_iterator, file_iterator, range_iterator
     )
@@ -160,38 +161,6 @@ def izip(*iterables):
     is exhausted and then it raises StopIteration.
     """
     return imap(None, *iterables)
-
-
-class ifilter(BaseItertool):
-    """ifilter(function or None, iterable) --> ifilter object
-
-    Return an iterator yielding those items of iterable for which function(item)
-    is true. If function is None, return the items that are true.
-    """
-    def __init__(self, predicate, iterable):
-        self._predicate = predicate if predicate is not None else bool
-        self._iterable = _iter(iterable)
-
-    def __next__(self):
-        val = next(self._iterable)
-        while not self._predicate(val):
-            val = next(self._iterable)
-        return val
-
-
-class ifilterfalse(ifilter):
-    """ifilterfalse(function or None, sequence) --> ifilterfalse object
-
-    Return those items of sequence for which function(item) is false.
-    If function is None, return the items that are false.
-    """
-    def __init__(self, predicate, iterable):
-        super(ifilterfalse, self).__init__(predicate, iterable)
-        self._true_predicate = self._predicate
-        self._predicate = self._negated
-
-    def _negated(self, argument):
-        return not self._true_predicate(argument)
 
 
 class product(BaseItertool):
@@ -358,3 +327,5 @@ class accumulate(BaseItertool):
         else:
             self._accumulated = self._combine(value)
         return self._accumulated
+
+

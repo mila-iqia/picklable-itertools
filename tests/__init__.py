@@ -12,7 +12,7 @@ from unittest import SkipTest
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator, product, tee, accumulate
+    range_iterator, product, tee, accumulate, takewhile, dropwhile
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -297,3 +297,20 @@ def test_accumulate():
     yield verify_same, accumulate, itertools.accumulate, [[1], [2], [3, 4]]
     yield (verify_same, accumulate, itertools.accumulate, [9, 1, 2],
            lambda x, y: x - y)
+
+
+def test_takewhile():
+    base = (verify_same, takewhile, itertools.takewhile, None)
+    yield base + (bool,)
+    yield base + (bool, [])
+    yield base + (bool, [0, 0, 5])
+    yield base + (bool, [1, 2, 0, 4, 0])
+    yield base + (lambda x: x > 3, range(5, 0, -1))
+
+def test_dropwhile():
+    base = (verify_same, dropwhile, itertools.dropwhile, None)
+    yield base + (bool,)
+    yield base + (bool, [])
+    yield base + (bool, [5, 5, 2, 0, 0])
+    yield base + (bool, [1, 2, 0, 4, 0])
+    yield base + (lambda x: x > 3, range(5, 0, -1))
