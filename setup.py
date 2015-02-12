@@ -2,8 +2,6 @@
 from os import path
 from setuptools import find_packages, setup
 
-from picklable_itertools.version import __version__
-
 HERE = path.abspath(path.dirname(__file__))
 
 with open(path.join(HERE, 'README.md')) as f:
@@ -11,7 +9,7 @@ with open(path.join(HERE, 'README.md')) as f:
 
 setup(
     name='picklable-itertools',
-    version=__version__,
+    version='0.1a1',  # PEP 440 compliant
     description='itertools. But picklable.',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/dwf/picklable_itertools',

@@ -1,11 +1,25 @@
 import collections
+import os.path
 import sys
+
+from pkg_resources import get_distribution, DistributionNotFound
+
 from .base import BaseItertool
 from .iter_dispatch import (
     _iter, ordered_sequence_iterator, file_iterator, range_iterator
     )
 
-from picklable_itertools.version import __version__  # noqa
+
+try:
+    DIST = get_distribution('picklable_itertools')
+    DIST_LOC = os.path.normcase(DIST.location)
+    HERE = os.path.normcase(__file__)
+    if not HERE.startswith(os.path.join(DIST_LOC, 'picklable_itertools')):
+        raise DistributionNotFound
+except DistributionNotFound:
+    __version__ = 'not installed'
+else:
+    __version__ = DIST.version
 
 
 class repeat(BaseItertool):
