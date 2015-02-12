@@ -1,7 +1,9 @@
 import functools
 import itertools
-import six
+import random
 import tempfile
+
+import six
 from six.moves import cPickle
 from six.moves import xrange
 from nose.tools import assert_raises
@@ -9,7 +11,7 @@ from nose.tools import assert_raises
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator
+    range_iterator, tee
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -215,3 +217,30 @@ def test_islice():
     yield (verify_same, islice, _islice, None, [1, 2, 3], 0, 9, 5)
 
     yield (verify_pickle, islice, _islice, 3, 2, [1, 2, 3], 5)
+
+
+def verify_tee(n, original, seed):
+    try:
+        state = random.getstate()
+        iterators = tee(original, n=n)
+        results = [[] for i in range(n)]
+        exhausted = [False] * n
+        while not all(exhausted):
+            i = random.randint(0, n - 1)
+            if not exhausted[i]:
+                if len(results[i]) == len(original):
+                    assert_raises(StopIteration, next, iterators[i])
+                    assert results[i] == original
+                    exhausted[i] = True
+                else:
+                    elem = next(iterators[i])
+                    results[i].append(elem)
+    finally:
+        random.setstate(state)
+
+
+def test_tee():
+    yield verify_tee, 2, [5, 2, 4], 1
+    yield verify_tee, 3, [5, 2, 4, 6, 9], 2
+    yield verify_tee, 5, [5, 2, 4, 6, 9], 3
+    yield verify_tee, 6, [], 3

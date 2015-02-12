@@ -8,6 +8,7 @@ from .base import BaseItertool
 from .iter_dispatch import (
     _iter, ordered_sequence_iterator, file_iterator, range_iterator
     )
+from .tee import tee_manager
 
 
 try:
@@ -252,3 +253,7 @@ class islice(BaseItertool):
         value = next(self._iterable)
         self._n += 1
         return value
+
+
+def tee(iterable, n=2):
+    return tee_manager(_iter(iterable), n=n).iterators()
