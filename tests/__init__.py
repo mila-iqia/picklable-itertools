@@ -206,6 +206,11 @@ def test_product():
            functools.partial(itertools.product, repeat=3), None, [], [3])
     yield (verify_same, functools.partial(product, repeat=3),
            functools.partial(itertools.product, repeat=3), None, [1], [])
+    yield (verify_pickle, product, itertools.product, 8, 3, [1, 2], [2, 3],
+           [5, 6])
+    yield (verify_pickle, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), 50, 45,
+           [1, 2], [3, 4])
 
 
 def test_zip_longest():
