@@ -15,10 +15,27 @@ def _iter(obj):
 
     if six.PY2 and isinstance(obj, (list, tuple)):
         return ordered_sequence_iterator(obj)
+    if six.PY2 and isinstance(obj, six.moves.xrange):
+        return range_iterator(obj)
     if isinstance(obj, file_types):
         return file_iterator(obj)
-    else:
-        return iter(obj)
+    return iter(obj)
+
+
+class range_iterator(BaseItertool):
+    """A picklable range iterator for Python 2"""
+    def __init__(self, xrange_):
+        self._start, self._stop, self._step = xrange_.__reduce__()[1]
+        self._n = self._start
+
+    def __next__(self):
+        if (self._step > 0 and self._n < self._stop or
+                self._step < 0 and self._n > self._stop):
+            value = self._n
+            self._n += self._step
+            return value
+        else:
+            raise StopIteration
 
 
 class file_iterator(BaseItertool):

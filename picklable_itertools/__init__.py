@@ -1,7 +1,9 @@
 import collections
 import sys
 from .base import BaseItertool
-from .iter_dispatch import _iter, ordered_sequence_iterator, file_iterator
+from .iter_dispatch import (
+    _iter, ordered_sequence_iterator, file_iterator, range_iterator
+    )
 
 from picklable_itertools.version import __version__  # noqa
 

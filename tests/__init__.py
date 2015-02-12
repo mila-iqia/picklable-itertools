@@ -3,11 +3,13 @@ import itertools
 import six
 import tempfile
 from six.moves import cPickle
+from six.moves import xrange
 from nose.tools import assert_raises
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
-    file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice
+    file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
+    range_iterator
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -73,6 +75,21 @@ def test_ordered_sequence_iterator():
     yield verify_same, ordered_sequence_iterator, iter, None, ()
     yield verify_same, ordered_sequence_iterator, iter, None, [5, 2]
     yield verify_same, ordered_sequence_iterator, iter, None, ("D", "X", "J")
+
+
+def test_range_iterator():
+    yield verify_same, range_iterator, iter, None, xrange(5)
+    yield verify_same, range_iterator, iter, None, xrange(2, 5)
+    yield verify_same, range_iterator, iter, None, xrange(5, 2)
+    yield verify_same, range_iterator, iter, None, xrange(0)
+    yield verify_same, range_iterator, iter, None, xrange(-3)
+    yield verify_same, range_iterator, iter, None, xrange(-5, -3)
+    yield verify_same, range_iterator, iter, None, xrange(-5, -1, -2)
+    yield verify_same, range_iterator, iter, None, xrange(-5, -1, 2)
+    yield verify_same, range_iterator, iter, None, xrange(2, 5, 7)
+    yield verify_same, range_iterator, iter, None, xrange(2, 7, -1)
+    yield verify_same, range_iterator, iter, None, xrange(5, 3, -1)
+    yield verify_same, range_iterator, iter, None, xrange(5, 4, -2)
 
 
 def _create_test_file():
