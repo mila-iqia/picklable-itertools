@@ -172,10 +172,8 @@ class ifilter(BaseItertool):
 
     def __next__(self):
         val = next(self._iterable)
-        print("val", val)
         while not self._predicate(val):
             val = next(self._iterable)
-            print("val", val)
         return val
 
 
