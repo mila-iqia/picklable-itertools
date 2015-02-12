@@ -11,7 +11,7 @@ from nose.tools import assert_raises
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator, tee
+    range_iterator, product, tee
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -182,6 +182,18 @@ def test_ifilterfalse():
            lambda x: x < 3, [])
     yield (verify_same, ifilterfalse, _filterfalse, None,
            None, [0, 3, 0, 0, 1])
+
+
+def test_product():
+    yield verify_same, product, itertools.product, None
+    yield verify_same, product, itertools.product, None, []
+    yield verify_same, product, itertools.product, None, [], []
+    yield verify_same, product, itertools.product, None, [], [], []
+    yield verify_same, product, itertools.product, None, [5]
+    yield verify_same, product, itertools.product, None, [5], []
+    yield verify_same, product, itertools.product, None, [], [5], []
+    yield verify_same, product, itertools.product, None, [2, 5], [3, 5, 9]
+    yield verify_same, product, itertools.product, None, [2, 5], [1], [3, 5, 9]
 
 
 def test_zip_longest():

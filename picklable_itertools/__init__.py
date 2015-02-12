@@ -193,6 +193,59 @@ class ifilterfalse(ifilter):
         return not self._true_predicate(argument)
 
 
+class product(BaseItertool):
+    def __init__(self, *iterables):
+        self._iterables = [_iter(it) for it in iterables]
+        self._contents = [[] for it in iterables]
+        self._exhausted = [False for it in iterables]
+        self._position = [0 for it in iterables]
+        self._initialized = False
+
+    def __next__(self):
+        # Welcome to the spaghetti factory.
+        def _next(i):
+            flip = False
+            if not self._exhausted[i]:
+                try:
+                    value = next(self._iterables[i])
+                    self._contents[i].append(value)
+                    self._position[i] += 1
+                except StopIteration:
+                    if len(self._contents[i]) == 0:
+                        raise StopIteration
+                    self._exhausted[i] = True
+                    self._position[i] = -1
+                    return _next(i)
+            else:
+                self._position[i] += 1
+                self._position[i] %= len(self._contents[i])
+                value = self._contents[i][self._position[i]]
+                if self._position[i] == 0:
+                    flip = True
+            return value, flip
+
+        result = collections.deque()
+        i = len(self._iterables) - 1
+        if not self._initialized:
+            while i >= 0:
+                result.appendleft(_next(i)[0])
+                self._position[i] = 0
+                i -= 1
+            self._initialized = True
+        else:
+            flip = True
+            while flip and i >= 0:
+                value, flip = _next(i)
+                i -= 1
+                result.appendleft(value)
+            while i >= 0:
+                result.appendleft(self._contents[i][self._position[i]])
+                i -= 1
+            if flip:
+                raise StopIteration
+        return tuple(result)
+
+
 class zip_longest(BaseItertool):
     def __init__(self, *iterables, **kwargs):
         if 'fillvalue' in kwargs:
