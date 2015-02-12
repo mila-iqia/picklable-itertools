@@ -11,7 +11,7 @@ from nose.tools import assert_raises
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator, tee
+    range_iterator, product, tee
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -182,6 +182,35 @@ def test_ifilterfalse():
            lambda x: x < 3, [])
     yield (verify_same, ifilterfalse, _filterfalse, None,
            None, [0, 3, 0, 0, 1])
+
+
+def test_product():
+    yield verify_same, product, itertools.product, None
+    yield verify_same, product, itertools.product, None, []
+    yield verify_same, product, itertools.product, None, [], []
+    yield verify_same, product, itertools.product, None, [], [], []
+    yield verify_same, product, itertools.product, None, [5]
+    yield verify_same, product, itertools.product, None, [5], []
+    yield verify_same, product, itertools.product, None, [], [5], []
+    yield verify_same, product, itertools.product, None, [2, 5], [3, 5, 9]
+    yield verify_same, product, itertools.product, None, [2, 5], [1], [3, 5, 9]
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [1, 2, 3])
+    yield (verify_same, functools.partial(product, repeat=4),
+           functools.partial(itertools.product, repeat=4), None, [1], [1, 2])
+    yield (verify_same, functools.partial(product, repeat=2),
+           functools.partial(itertools.product, repeat=2), None, [3, 1], [1])
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [])
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [], [3])
+    yield (verify_same, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), None, [1], [])
+    yield (verify_pickle, product, itertools.product, 8, 3, [1, 2], [2, 3],
+           [5, 6])
+    yield (verify_pickle, functools.partial(product, repeat=3),
+           functools.partial(itertools.product, repeat=3), 50, 45,
+           [1, 2], [3, 4])
 
 
 def test_zip_longest():
