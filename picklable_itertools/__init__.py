@@ -198,7 +198,7 @@ class product(BaseItertool):
         self._iterables = [_iter(it) for it in iterables]
         self._contents = [[] for it in iterables]
         self._exhausted = [False for it in iterables]
-        self._position = [0 for it in iterables]
+        self._position = [-1 for it in iterables]
         self._initialized = False
 
     def __next__(self):
@@ -229,7 +229,6 @@ class product(BaseItertool):
         if not self._initialized:
             while i >= 0:
                 result.appendleft(_next(i)[0])
-                self._position[i] = 0
                 i -= 1
             self._initialized = True
         else:
@@ -238,11 +237,11 @@ class product(BaseItertool):
                 value, flip = _next(i)
                 i -= 1
                 result.appendleft(value)
+            if flip:
+                raise StopIteration
             while i >= 0:
                 result.appendleft(self._contents[i][self._position[i]])
                 i -= 1
-            if flip:
-                raise StopIteration
         return tuple(result)
 
 
