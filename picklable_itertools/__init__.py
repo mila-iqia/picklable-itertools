@@ -336,3 +336,25 @@ class islice(BaseItertool):
 
 def tee(iterable, n=2):
     return tee_manager(_iter(iterable), n=n).iterators()
+
+
+class accumulate(BaseItertool):
+    def __init__(self, iterable, func=None):
+        self._iter = _iter(iterable)
+        self._func = func
+        self._initialized = False
+        self._accumulated = None
+
+    def _combine(self, value):
+        if self._func is not None:
+            return self._func(self._accumulated, value)
+        else:
+            return self._accumulated + value
+
+    def __next__(self):
+        incoming = next(self._iter)
+        if not self._initialized:
+            self._accumulated = value
+        else:
+            self._accumulated = self._combine(value)
+        return self._accumulated

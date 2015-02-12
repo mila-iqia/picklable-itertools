@@ -7,11 +7,12 @@ import six
 from six.moves import cPickle
 from six.moves import xrange
 from nose.tools import assert_raises
+from unittest import SkipTest
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator, product, tee
+    range_iterator, product, tee, accumulate
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -286,3 +287,13 @@ def test_tee():
     yield verify_tee, 3, [5, 2, 4, 6, 9], 2
     yield verify_tee, 5, [5, 2, 4, 6, 9], 3
     yield verify_tee, 6, [], 3
+
+
+def test_accumulate():
+    if not six.PY3:
+        raise SkipTest()
+    yield verify_same, accumulate, itertools.accumulate, [5, 4, 9]
+    yield verify_same, accumulate, itertools.accumulate, ['a', 'b', 'c']
+    yield verify_same, accumulate, itertools.accumulate, [[1], [2], [3, 4]]
+    yield (verify_same, accumulate, itertools.accumulate, [9, 1, 2],
+           lambda x, y: x - y)
