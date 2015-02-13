@@ -292,10 +292,10 @@ def test_tee():
 def test_accumulate():
     if not six.PY3:
         raise SkipTest()
-    yield verify_same, accumulate, itertools.accumulate, [5, 4, 9]
-    yield verify_same, accumulate, itertools.accumulate, ['a', 'b', 'c']
-    yield verify_same, accumulate, itertools.accumulate, [[1], [2], [3, 4]]
-    yield (verify_same, accumulate, itertools.accumulate, [9, 1, 2],
+    yield verify_same, accumulate, itertools.accumulate, None, [5, 4, 9]
+    yield verify_same, accumulate, itertools.accumulate, None, ['a', 'b', 'c']
+    yield verify_same, accumulate, itertools.accumulate, None, [[1], [2], [3, 4]]
+    yield (verify_same, accumulate, itertools.accumulate, None, [9, 1, 2],
            lambda x, y: x - y)
 
 

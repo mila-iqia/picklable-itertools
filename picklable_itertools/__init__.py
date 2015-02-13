@@ -335,9 +335,10 @@ class accumulate(BaseItertool):
             return self._accumulated + value
 
     def __next__(self):
-        incoming = next(self._iter)
+        value = next(self._iter)
         if not self._initialized:
             self._accumulated = value
+            self._initialized = True
         else:
             self._accumulated = self._combine(value)
         return self._accumulated
