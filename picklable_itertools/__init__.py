@@ -56,18 +56,20 @@ class chain(BaseItertool):
     iterable, until all of the iterables are exhausted.
     """
     def __init__(self, *iterables):
-        self._iterables = collections.deque(iterables)
+        self._iterables = _iter(iterables)
         self._current = repeat(None, 0)
 
     def __next__(self):
         try:
             return next(self._current)
         except StopIteration:
-            try:
-                self._current = _iter(self._iterables.popleft())
-            except IndexError:
-                raise StopIteration
+            self._current = _iter(next(self._iterables))
         return next(self)
+
+    @classmethod
+    def from_iterable(cls, iterable):
+        obj = cls()
+        obj._iterables = iterable
 
 
 class compress(BaseItertool):
