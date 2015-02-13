@@ -12,7 +12,7 @@ from unittest import SkipTest
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator, product, tee, accumulate, takewhile, dropwhile
+    range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -307,6 +307,7 @@ def test_takewhile():
     yield base + (bool, [1, 2, 0, 4, 0])
     yield base + (lambda x: x > 3, range(5, 0, -1))
 
+
 def test_dropwhile():
     base = (verify_same, dropwhile, itertools.dropwhile, None)
     yield base + (bool,)
@@ -314,3 +315,10 @@ def test_dropwhile():
     yield base + (bool, [5, 5, 2, 0, 0])
     yield base + (bool, [1, 2, 0, 4, 0])
     yield base + (lambda x: x > 3, range(5, 0, -1))
+
+
+def test_starmap():
+    yield verify_same, starmap, itertools.starmap, None, lambda x: x
+    yield verify_same, starmap, itertools.starmap, None, lambda x: x, []
+    yield (verify_same, starmap, itertools.starmap, None, lambda x, y: x + y,
+           [(5, 9), [4, 2]])

@@ -146,12 +146,24 @@ class imap(BaseItertool):
         self._function = function
         self._iterables = tuple([_iter(it) for it in iterables])
 
+    def _run(self, args):
+        return self._function(*args)
+
     def __next__(self):
         args = tuple([next(it) for it in self._iterables])
         if self._function is None:
             return args
         else:
-            return self._function(*args)
+            return self._run(args)
+
+
+class starmap(imap):
+    def __init__(self, function, iterable):
+        self._iterables = (_iter(iterable),)
+        self._function = function
+
+    def _run(self, args):
+        return self._function(*args[0])
 
 
 def izip(*iterables):
