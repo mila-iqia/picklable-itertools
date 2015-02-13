@@ -4,22 +4,23 @@ from setuptools import find_packages, setup
 
 HERE = path.abspath(path.dirname(__file__))
 
-with open(path.join(HERE, 'README.md')) as f:
+with open(path.join(HERE, 'README.rst')) as f:
     LONG_DESCRIPTION = f.read().strip()
 
 setup(
     name='picklable-itertools',
-    version='0.1a1',  # PEP 440 compliant
+    version='0.0.1',  # PEP 440 compliant
     description='itertools. But picklable.',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/dwf/picklable_itertools',
     author='David Wade-Farley',
+    author_email='d.wade.farley@gmail.com',
     license='MIT',
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'Topic :: Utilities'
+        'Topic :: Utilities',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
@@ -28,4 +29,6 @@ setup(
     ],
     keywords='pickle serialize pickling itertools iterable iteration',
     packages=find_packages(exclude=['tests']),
-    install_requires=['six'])
+    install_requires=['six'],
+    zip_safe=True
+    )
