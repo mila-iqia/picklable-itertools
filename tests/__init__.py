@@ -12,7 +12,8 @@ from unittest import SkipTest
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
-    range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap
+    range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap,
+    groupby
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -322,3 +323,25 @@ def test_starmap():
     yield verify_same, starmap, itertools.starmap, None, lambda x: x, []
     yield (verify_same, starmap, itertools.starmap, None, lambda x, y: x + y,
            [(5, 9), [4, 2]])
+
+
+def verify_groupby(*args, **kwargs):
+    reference = itertools.groupby(*args, **kwargs)
+    actual = groupby(*args, **kwargs)
+    while True:
+        try:
+            ref_key, ref_grouper = next(reference)
+        except StopIteration:
+            check_stops(actual)
+            break
+        try:
+            actual_key, actual_grouper = next(actual)
+        except StopIteration:
+            assert False, "prematurely exhausted; expected {}".format(ref_key)
+        verify_same(lambda: ref_grouper, lambda: actual_grouper, None)
+
+
+def test_groupby():
+    yield verify_groupby, []
+    yield verify_groupby, [1, 1, 2, 3, 3, 3, 4, 5, 7, 7]
+    yield verify_groupby, [1, 1, 3, 3, 4, 4, 2, 3, 3, 5], lambda x: x % 2 == 0
