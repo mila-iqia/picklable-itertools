@@ -13,7 +13,7 @@ from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, zip_longest, _iter, islice,
     range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap,
-    groupby
+    groupby, permutations, combinations, combinations_with_replacement
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -345,3 +345,36 @@ def test_groupby():
     yield verify_groupby, []
     yield verify_groupby, [1, 1, 2, 3, 3, 3, 4, 5, 7, 7]
     yield verify_groupby, [1, 1, 3, 3, 4, 4, 2, 3, 3, 5], lambda x: x % 2 == 0
+
+
+def test_permutations():
+    yield verify_same, permutations, itertools.permutations, None, lambda x: x
+    yield (verify_same, permutations, itertools.permutations, None,
+           [])
+    yield (verify_same, permutations, itertools.permutations, None,
+           [5, 4, 3, 2, 1])
+    yield (verify_same, permutations, itertools.permutations, None,
+           [5, 4, 3, 2, 1], 2)
+
+
+def test_combinations():
+    yield verify_same, combinations, itertools.combinations, None
+    yield (verify_same, combinations, itertools.combinations, None, [])
+    yield (verify_same, combinations, itertools.combinations, None,
+           [5, 4, 3, 2, 1])
+    yield (verify_same, combinations, itertools.combinations, None,
+           [5, 4, 3, 2, 1], 2)
+
+def test_combinations_with_replacement():
+    yield (verify_same, combinations_with_replacement,
+           itertools.combinations_with_replacement,
+           None, lambda x: x)
+    yield (verify_same, combinations_with_replacement,
+           itertools.combinations_with_replacement,
+           None, lambda x: x, [])
+    yield (verify_same, combinations_with_replacement,
+           itertools.combinations_with_replacement,
+           None)
+    yield (verify_same, combinations_with_replacement,
+           itertools.combinations_with_replacement,
+           None, [5, 4, 3, 2, 1], 2)

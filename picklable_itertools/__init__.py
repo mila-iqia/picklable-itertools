@@ -1,6 +1,9 @@
+from abc import ABCMeta, abstractmethod
 import collections
 import os.path
 import sys
+
+from six import add_metaclass
 
 from pkg_resources import get_distribution, DistributionNotFound
 
@@ -404,3 +407,49 @@ class groupby(BaseItertool):
             self._current_grouper = _grouper(self._iterable, value,
                                              self._keyfunc)
             return self._keyfunc(value), self._current_grouper
+
+
+@add_metaclass(ABCMeta)
+class IndexBased(BaseItertool):
+    # Very inefficient implementation. Could be sped up by adapting the
+    # code from the itertools documentation page.
+    def __init__(self, iterable, r=None):
+        self._pool = tuple(iterable)
+        self._r = r if r is not None else len(self._pool)
+        self._iter = self._construct_iter()
+
+    def _construct_iter(self):
+        return product(range(len(self._pool)), repeat=self._r)
+
+    @abstractmethod
+    def _valid_indices(self, indices):
+        pass
+
+    def __next__(self):
+        indices = next(self._iter)
+        while not self._valid_indices(indices):
+            indices = next(self._iter)
+        return tuple(self._pool[i] for i in indices)
+
+
+class permutations(IndexBased):
+    def _valid_indices(self, indices):
+        return len(set(indices)) == self._r
+
+
+@add_metaclass(ABCMeta)
+class AbstractCombinations(IndexBased):
+    def __init__(self, iterable, r):
+        super(AbstractCombinations, self).__init__(iterable, r)
+
+    def _valid_indices(self, indices):
+        return sorted(indices) == list(indices)
+
+
+class combinations_with_replacement(AbstractCombinations):
+    pass
+
+
+class combinations(AbstractCombinations):
+    def _construct_iter(self):
+        return permutations(range(len(self._pool)), self._r)
