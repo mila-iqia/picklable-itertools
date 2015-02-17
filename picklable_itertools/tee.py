@@ -41,3 +41,7 @@ class tee_manager(object):
         elem = next(self._iterable)
         for it in self._tee_iterators:
             it._append(elem)
+
+
+def tee(iterable, n=2):
+    return tee_manager(_iter(iterable), n=n).iterators()
