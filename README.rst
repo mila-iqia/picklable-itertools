@@ -27,8 +27,6 @@ Philosophy
   we provide both. We also provide names that were only available in the
   Python 2 incarnation of `itertools` (`ifilter`, `izip`), also available
   under their built-in names in Python 3 (`filter`, `zip`), for convenience.
-  We also provide an `xrange`/`range` replacement that is picklable under
-  both Python 2 and Python 3, available under both names.
 * *Handle built-in types gracefully if possible.* List iterators, etc.
   are not picklable on Python 2.x, so we provide an alternative
   implementation. File iterators are handled transparently as well. set
