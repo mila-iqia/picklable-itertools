@@ -47,10 +47,6 @@ class range_iterator(BaseItertool):
             raise StopIteration
 
 
-def xrange(*args):
-    return range_iterator(six.moves.xrange(*args))
-
-
 class file_iterator(BaseItertool):
     """A picklable file iterator."""
     def __init__(self, f):

@@ -5,7 +5,7 @@ from pkg_resources import get_distribution, DistributionNotFound
 from .filter import ifilter, ifilterfalse, takewhile, dropwhile
 from .grouping import groupby
 from .iter_dispatch import (
-    _iter, ordered_sequence_iterator, file_iterator, range_iterator, xrange
+    _iter, ordered_sequence_iterator, file_iterator, range_iterator
 )
 from .map_zip import imap, starmap, izip, izip_longest
 from .permutations import (
@@ -19,7 +19,6 @@ from .tee import tee
 # Python 3 equivalents.
 filter = ifilter
 filterfalse = ifilterfalse
-range = xrange
 zip = izip
 zip_longest = izip_longest
 
@@ -38,8 +37,7 @@ else:
 
 __all__ = ['ifilter', 'ifilterfalse', 'takewhile', 'dropwhile', 'groupby',
            '_iter', 'ordered_sequence_iterator', 'file_iterator',
-           'range_iterator', 'range', 'xrange', 'imap', 'starmap', 'izip',
-           'izip_longest', 'permutations', 'combinations',
-           'combinations_with_replacement', 'accumulate', 'chain', 'compress',
-           'count', 'cycle', 'repeat', 'islice', 'tee', 'filter', 'filterfalse',
-           'zip', 'zip_longest']
+           'range_iterator', 'imap', 'starmap', 'izip', 'izip_longest',
+           'permutations', 'combinations', 'combinations_with_replacement',
+           'accumulate', 'chain', 'compress', 'count', 'cycle', 'repeat',
+           'islice', 'tee']
