@@ -32,7 +32,7 @@ def _iter(obj):
 
 
 class range_iterator(BaseItertool):
-    """A picklable range iterator for Python 2"""
+    """A picklable range iterator for Python 2."""
     def __init__(self, xrange_):
         self._start, self._stop, self._step = xrange_.__reduce__()[1]
         self._n = self._start

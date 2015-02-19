@@ -26,6 +26,12 @@ class IndexBased(BaseItertool):
 
 
 class permutations(IndexBased):
+    """permutations(iterable[, r]) --> permutations object
+
+    Return successive r-length permutations of elements in the iterable.
+
+    permutations(range(3), 2) --> (0,1), (0,2), (1,0), (1,2), (2,0), (2,1)
+    """
     def _valid_indices(self, indices):
         return len(set(indices)) == self._r
 
@@ -40,9 +46,22 @@ class AbstractCombinations(IndexBased):
 
 
 class combinations_with_replacement(AbstractCombinations):
+    """combinations(iterable, r) --> combinations object
+
+    Return successive r-length combinations of elements in the iterable.
+
+    combinations(range(4), 3) --> (0,1,2), (0,1,3), (0,2,3), (1,2,3)
+    """
     pass
 
 
 class combinations(AbstractCombinations):
+    """combinations_with_replacement(iterable, r) -->
+    combinations_with_replacement object
+
+    Return successive r-length combinations of elements in the iterable
+    allowing individual elements to have successive repeats.
+    combinations_with_replacement('ABC', 2) --> AA AB AC BB BC CC
+    """
     def _construct_iter(self):
         return permutations(range(len(self._pool)), self._r)

@@ -45,6 +45,11 @@ class ifilterfalse(ifilter):
 
 
 class takewhile(BaseFilter):
+    """takewhile(predicate, iterable) --> takewhile object
+
+    Return successive entries from an iterable as long as the
+    predicate evaluates to true for each entry.
+    """
     def __next__(self):
         value = next(self._iter)
         if not self._predicate(value):
@@ -53,6 +58,11 @@ class takewhile(BaseFilter):
 
 
 class dropwhile(takewhile):
+    """dropwhile(predicate, iterable) --> dropwhile object
+
+    Drop items from the iterable while predicate(item) is true.
+    Afterwards, return every element until the iterable is exhausted.
+    """
     def __next__(self):
         value = next(self._iter)
         while not getattr(self, '_started', False) and self._predicate(value):

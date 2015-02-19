@@ -33,6 +33,9 @@ class _grouper(BaseItertool):
 
 
 class groupby(BaseItertool):
+    """groupby(iterable[, keyfunc]) -> create an iterator which returns
+    (key, sub-iterator) grouped by each value of key(value).
+    """
     def __init__(self, iterable, key=None):
         self._key = key
         self._iterable = _iter(iterable)

@@ -24,6 +24,11 @@ class imap(BaseItertool):
 
 
 class starmap(imap):
+    """starmap(function, sequence) --> starmap object
+
+    Return an iterator whose values are returned from the function evaluated
+    with a argument tuple taken from the given sequence.
+    """
     def __init__(self, function, iterable):
         self._iterables = (_iter(iterable),)
         self._function = function
@@ -44,6 +49,16 @@ def izip(*iterables):
 
 
 class izip_longest(BaseItertool):
+    """zip_longest(iter1 [,iter2 [...]], [fillvalue=None]) --> zip_longest
+    object
+
+    Return an zip_longest object whose .__next__() method returns a tuple where
+    the i-th element comes from the i-th iterable argument.  The .__next__()
+    method continues until the longest iterable in the argument sequence
+    is exhausted and then it raises StopIteration.  When the shorter iterables
+    are exhausted, the fillvalue is substituted in their place.  The fillvalue
+    defaults to None or can be specified by a keyword argument.
+    """
     def __init__(self, *iterables, **kwargs):
         if 'fillvalue' in kwargs:
             self._fillvalue = kwargs['fillvalue']

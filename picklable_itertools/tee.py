@@ -44,4 +44,5 @@ class tee_manager(object):
 
 
 def tee(iterable, n=2):
+    """tee(iterable, n=2) --> tuple of n independent iterators."""
     return tee_manager(_iter(iterable), n=n).iterators()

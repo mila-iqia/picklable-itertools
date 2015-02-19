@@ -5,6 +5,16 @@ from .iter_dispatch import _iter
 
 
 class islice(BaseItertool):
+    """islice(iterable, stop) --> islice object
+    islice(iterable, start, stop[, step]) --> islice object
+
+    Return an iterator whose next() method returns selected values from an
+    iterable.  If start is specified, will skip all preceding elements;
+    otherwise, start defaults to zero.  Step defaults to one.  If
+    specified as another value, step determines how many values are
+    skipped between successive calls.  Works like a slice() on a list
+    but returns an iterator.
+    """
     def __init__(self, iterable, start, stop=None, step=1):
         if stop is None:
             start, stop = 0, start

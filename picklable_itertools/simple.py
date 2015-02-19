@@ -115,6 +115,10 @@ class cycle(BaseItertool):
 
 
 class accumulate(BaseItertool):
+    """accumulate(iterable[, func]) --> accumulate object
+
+    Return series of accumulated sums (or other binary function results).
+    """
     def __init__(self, iterable, func=None):
         self._iter = _iter(iterable)
         self._func = func
