@@ -34,6 +34,7 @@ def verify_same(picklable_version, reference_version, n, *args, **kwargs):
         return
     actual = picklable_version(*args, **kwargs)
     done = 0
+    assert n is None or isinstance(n, int)
     while done != n:
         try:
             expected_val = next(expected)
@@ -239,7 +240,7 @@ def test_zip_longest():
     yield (verify_same, zip_longest, _zip_longest, None, [7], [4], [],
            [5, 9])
     yield (verify_same, functools.partial(zip_longest, fillvalue=-1),
-           functools.partial(_zip_longest, fillvalue=-1),
+           functools.partial(_zip_longest, fillvalue=-1), None,
            [7], [4], [], [5, 9])
 
     yield (verify_pickle, zip_longest, _zip_longest, 3, 2, [7, 9, 8], [1, 2])
