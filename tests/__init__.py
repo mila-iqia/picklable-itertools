@@ -424,18 +424,15 @@ def verify_groupby(*args, **kwargs):
         if 'm' not in kwargs:
             raise ValueError('got n without m')
         pickle = True
-        n = kwargs['n']
-        m = kwargs['m']
-        del kwargs['m']
-        del kwargs['n']
+        n = kwargs.pop('n')
+        m = kwargs.pop('m')
     elif 'm' in kwargs:
         raise ValueError('got m without n')
     else:
         pickle = False
         n = m = None
     if 'pickle_outer' in kwargs:
-        pickle_outer = kwargs['pickle_outer']
-        del kwargs['pickle_outer']
+        pickle_outer = kwargs.pop('pickle_outer')
     else:
         pickle_outer = None
     reference = itertools.groupby(*args, **kwargs)
