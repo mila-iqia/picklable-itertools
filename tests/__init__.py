@@ -455,12 +455,12 @@ def verify_groupby(*args, **kwargs):
             n = n[1:]
             this_m = m[0]
             m = m[1:]
-            verify_pickle(partial(_identity, ref_grouper),
-                          partial(_identity, actual_grouper), this_n, this_m)
+            verify_pickle(partial(_identity, actual_grouper),
+                          partial(_identity, ref_grouper), this_n, this_m)
 
         else:
-            verify_same(partial(_identity, ref_grouper),
-                        partial(_identity, actual_grouper), None)
+            verify_same(partial(_identity, actual_grouper),
+                        partial(_identity, ref_grouper), None)
         outer_iters += 1
 
 
@@ -488,7 +488,6 @@ def test_groupby():
     yield (partial(verify_groupby, n=[4, 3, 3], m=[1, 2, 0], pickle_outer=0),
            [1, 1, 3, 3, 4, 4, 2, 3, 3, 5],
            partial(_mod, divisor=2))
-
 
 
 def test_permutations():
