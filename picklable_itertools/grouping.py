@@ -3,11 +3,10 @@ from .iter_dispatch import _iter
 
 
 class _grouper(BaseItertool):
-    def __init__(self, iterator, value, keyfunc):
-        self._iterator = iterator
+    def __init__(self, value, groupby):
         self._value = value
-        self._keyfunc = keyfunc
-        self._key = self._keyfunc(self._value)
+        self._groupby = groupby
+        self._key = self._groupby._keyfunc(self._value)
         self._initialized = False
         self._stream_ended = False
         self._done = False
@@ -20,12 +19,12 @@ class _grouper(BaseItertool):
             if self._done:
                 raise StopIteration
             try:
-                value = next(self._iterator)
+                value = next(self._groupby._iterator)
             except StopIteration:
                 self._stream_ended = True
                 self._done = True
                 raise
-            if self._keyfunc(value) != self._key:
+            if self._groupby._keyfunc(value) != self._key:
                 self._terminal_value = value
                 self._done = True
                 raise StopIteration
@@ -38,7 +37,7 @@ class groupby(BaseItertool):
     """
     def __init__(self, iterable, key=None):
         self._key = key
-        self._iterable = _iter(iterable)
+        self._iterator = _iter(iterable)
         self._current_key = self._initial_key = object()
 
     def _keyfunc(self, value):
@@ -49,9 +48,8 @@ class groupby(BaseItertool):
 
     def __next__(self):
         if not hasattr(self, '_current_grouper'):
-            value = next(self._iterable)
-            self._current_grouper = _grouper(self._iterable, value,
-                                             self._keyfunc)
+            value = next(self._iterator)
+            self._current_grouper = _grouper(value, self)
             return self._keyfunc(value), self._current_grouper
         else:
             while True:
@@ -62,6 +60,5 @@ class groupby(BaseItertool):
             if self._current_grouper._stream_ended:
                 raise StopIteration
             value = self._current_grouper._terminal_value
-            self._current_grouper = _grouper(self._iterable, value,
-                                             self._keyfunc)
+            self._current_grouper = _grouper(value, self)
             return self._keyfunc(value), self._current_grouper
