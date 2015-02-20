@@ -40,4 +40,4 @@ __all__ = ['ifilter', 'ifilterfalse', 'takewhile', 'dropwhile', 'groupby',
            'range_iterator', 'imap', 'starmap', 'izip', 'izip_longest',
            'permutations', 'combinations', 'combinations_with_replacement',
            'accumulate', 'chain', 'compress', 'count', 'cycle', 'repeat',
-           'islice', 'tee']
+           'islice', 'tee', 'filter', 'filterfalse', 'zip', 'zip_longest']
