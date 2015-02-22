@@ -46,22 +46,22 @@ class AbstractCombinations(IndexBased):
 
 
 class combinations_with_replacement(AbstractCombinations):
-    """combinations(iterable, r) --> combinations object
-
-    Return successive r-length combinations of elements in the iterable.
-
-    combinations(range(4), 3) --> (0,1,2), (0,1,3), (0,2,3), (1,2,3)
-    """
-    pass
-
-
-class combinations(AbstractCombinations):
     """combinations_with_replacement(iterable, r) -->
     combinations_with_replacement object
 
     Return successive r-length combinations of elements in the iterable
     allowing individual elements to have successive repeats.
     combinations_with_replacement('ABC', 2) --> AA AB AC BB BC CC
+    """
+    pass
+
+
+class combinations(AbstractCombinations):
+    """combinations(iterable, r) --> combinations object
+
+    Return successive r-length combinations of elements in the iterable.
+
+    combinations(range(4), 3) --> (0,1,2), (0,1,3), (0,2,3), (1,2,3)
     """
     def _construct_iter(self):
         return permutations(range(len(self._pool)), self._r)
