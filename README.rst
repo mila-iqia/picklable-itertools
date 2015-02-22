@@ -8,12 +8,14 @@ compatible.
 Why?
 ----
 * Because the standard library pickle module (nor the excellent dill_ package)
-  can't serialize all of the `itertools` iterators.
+  can't serialize all of the `itertools` iterators, at least on Python 2
+  (at least some appear to be serializable on Python 3).
 * Because there are lots of instances where these things in `itertools` would
-  simplify code, but can't be used because serializability must be maintained.
-  Primarily blocks_ is our first consumer. We'd like to be able to serialize
-  the entire state of a long-running program for later resumption. We can't
-  do this with non-picklable objects.
+  simplify code, but can't be used because serializability must be maintained
+  across both Python 2 and Python 3.  The in-development framework Blocks_ is
+  our first consumer. We'd like to be able to serialize the entire state of a
+  long-running program for later resumption. We can't do this with
+  non-picklable objects.
 
 .. _dill: https://github.com/uqfoundation/dill
 .. _blocks: https://github.com/bartvm/blocks
@@ -27,6 +29,9 @@ Philosophy
   we provide both. We also provide names that were only available in the
   Python 2 incarnation of `itertools` (`ifilter`, `izip`), also available
   under their built-in names in Python 3 (`filter`, `zip`), for convenience.
+  As new objects are added to the Python 3 `itertools` module, we intend
+  to add them (`accumulate`, for example, appears only in Python 3, and a
+  picklable implementation is contained in this package.)
 * *Handle built-in types gracefully if possible.* List iterators, etc.
   are not picklable on Python 2.x, so we provide an alternative
   implementation. File iterators are handled transparently as well. set
