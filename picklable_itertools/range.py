@@ -50,6 +50,21 @@ class xrange(object):
     def step(self):
         return self._step
 
+    def count(self, i):
+        if self._stop > self._start and self._step > 0:
+            return int(self._start <= i < self._stop and
+                       (i - self._start) % self._step == 0)
+        elif self._stop < self._start and self._step < 0:
+            return int(self._start >= i > self._stop and
+                       (i - self._start) % self._step == 0)
+        else:
+            return False
+
+    def index(self, i):
+        if self.count(i) == 0:
+            raise ValueError("{} is not in range".format(i))
+        return (i - self._start) // self._step
+
     def __reduce__(self):
         return (self.__class__, (self.start, self.stop, self.step))
 
