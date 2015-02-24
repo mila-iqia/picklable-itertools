@@ -51,6 +51,9 @@ class xrange(object):
         return self._step
 
     def count(self, i):
+        """rangeobject.count(value) -> integer -- return number of occurrences
+        of value
+        """
         if self._stop > self._start and self._step > 0:
             return int(self._start <= i < self._stop and
                        (i - self._start) % self._step == 0)
@@ -61,6 +64,10 @@ class xrange(object):
             return False
 
     def index(self, i):
+        """xrangeobject.index(value, [start, [stop]]) -> integer --
+        return index of value.
+        Raise ValueError if the value is not present.
+        """
         if self.count(i) == 0:
             raise ValueError("{} is not in range".format(i))
         return (i - self._start) // self._step
