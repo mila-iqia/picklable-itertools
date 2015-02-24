@@ -57,9 +57,6 @@ class xrange(object):
         return range_iterator(self)
 
     def __repr__(self):
-        return str(self)
-
-    def __str__(self):
         return (__name__.split('.')[0] + '.' + self.__class__.__name__ +
                 (str((self.start, self.stop)) if self.step == 1 else
                  str((self.start, self.stop, self.step))))
