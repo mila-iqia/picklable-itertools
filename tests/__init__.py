@@ -14,7 +14,8 @@ from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, izip_longest, _iter, islice,
     range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap,
-    groupby, permutations, combinations, combinations_with_replacement
+    groupby, permutations, combinations, combinations_with_replacement,
+    xrange as _xrange
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -536,3 +537,12 @@ def test_combinations_with_replacement():
     yield (verify_pickle, combinations_with_replacement,
            itertools.combinations_with_replacement,
            15, 0, [5, 4, 3, 2, 1], 2)
+
+
+def test_xrange():
+    assert list(xrange(10)) == list(_xrange(10))
+    assert list(xrange(10, 15)) == list(_xrange(10, 15))
+    assert list(xrange(10, 20, 2)) == list(_xrange(10, 20, 2))
+    assert list(xrange(5, 1, -1)) == list(_xrange(5, 1, -1))
+    assert (list(xrange(5, 55, 3)) ==
+            list(cPickle.loads(cPickle.dumps(_xrange(5, 55, 3)))))
