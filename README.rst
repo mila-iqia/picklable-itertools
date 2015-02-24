@@ -34,8 +34,11 @@ Philosophy
   picklable implementation is contained in this package.)
 * *Handle built-in types gracefully if possible.* List iterators, etc.
   are not picklable on Python 2.x, so we provide an alternative
-  implementation. File iterators are handled transparently as well. set
-  and dict iterators demand a bit more thought.
+  implementation. File iterators are handled transparently as well. dict
+  iterators and set iterators are currently *not* supported.
+  `picklable_itertools.xrange` can be used as a drop-in replacement for
+  Python 2 `xrange`/Python 3 `range`, with the benefit that the iterators
+  produced by it will be picklable on both Python 2 and 3.
 * *Premature optimization is the root of all evil.* These things are
   implemented in Python, so speed is obviously not our primary concern. Several
   of the more advanced iterators are constructed by chaining simpler iterators
