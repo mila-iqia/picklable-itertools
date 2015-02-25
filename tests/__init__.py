@@ -7,14 +7,15 @@ import tempfile
 import six
 from six.moves import cPickle
 from six.moves import xrange
-from nose.tools import assert_raises
+from nose.tools import assert_raises, assert_equal
 from unittest import SkipTest
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
     file_iterator, ordered_sequence_iterator, izip_longest, _iter, islice,
     range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap,
-    groupby, permutations, combinations, combinations_with_replacement
+    groupby, permutations, combinations, combinations_with_replacement,
+    xrange as _xrange
 )
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
@@ -536,3 +537,30 @@ def test_combinations_with_replacement():
     yield (verify_pickle, combinations_with_replacement,
            itertools.combinations_with_replacement,
            15, 0, [5, 4, 3, 2, 1], 2)
+
+
+def test_xrange():
+    yield assert_equal, list(xrange(10)), list(_xrange(10))
+    yield assert_equal, list(xrange(10, 15)), list(_xrange(10, 15))
+    yield assert_equal, list(xrange(10, 20, 2)), list(_xrange(10, 20, 2))
+    yield assert_equal, list(xrange(5, 1, -1)), list(_xrange(5, 1, -1))
+    yield (assert_equal, list(xrange(5, 55, 3)),
+           list(cPickle.loads(cPickle.dumps(_xrange(5, 55, 3)))))
+    yield assert_equal, _xrange(5).index(4), 4
+    yield assert_equal, _xrange(5, 9).index(6), 1
+    yield assert_equal, _xrange(8, 24, 3).index(11), 1
+    yield assert_equal, _xrange(25, 4, -5).index(25), 0
+    yield assert_equal, _xrange(28, 7, -7).index(14), 2
+    yield assert_raises, ValueError, _xrange(2, 9, 2).index, 3
+    yield assert_raises, ValueError, _xrange(2, 20, 2).index, 9
+    yield assert_equal, _xrange(5).count(5), 0
+    yield assert_equal, _xrange(5).count(4), 1
+    yield assert_equal, _xrange(4, 9).count(4), 1
+    yield assert_equal, _xrange(3, 9, 2).count(4), 0
+    yield assert_equal, _xrange(3, 9, 2).count(5), 1
+    yield assert_equal, _xrange(3, 9, 2).count(20), 0
+    yield assert_equal, _xrange(9, 3).count(5), 0
+    yield assert_equal, _xrange(3, 10, -1).count(5), 0
+    yield assert_equal, _xrange(10, 3, -1).count(5), 1
+    yield assert_equal, _xrange(10, 0, -2).count(6), 1
+    yield assert_equal, _xrange(10, -1, -3).count(7), 1

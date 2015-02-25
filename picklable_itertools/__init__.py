@@ -12,6 +12,7 @@ from .permutations import (
     permutations, combinations, combinations_with_replacement
 )
 from .product import product
+from .range import xrange
 from .simple import accumulate, chain, compress, count, cycle, repeat
 from .slicing import islice
 from .tee import tee
