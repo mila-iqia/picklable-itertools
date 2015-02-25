@@ -1,6 +1,6 @@
+import six.moves
 from numbers import Integral
 from .iter_dispatch import range_iterator
-
 
 __all__ = ['xrange']
 
@@ -71,6 +71,9 @@ class xrange(object):
         if self.count(i) == 0:
             raise ValueError("{} is not in range".format(i))
         return (i - self._start) // self._step
+
+    def __len__(self):
+        return len(six.moves.xrange(self._start, self._stop, self._step))
 
     def __reduce__(self):
         return (self.__class__, (self.start, self.stop, self.step))
