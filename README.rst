@@ -3,7 +3,11 @@ picklable-itertools
 
 A reimplementation of the Python standard library's `itertools`, in Python,
 using picklable iterator objects. Intended to be Python 2.7 and 3.4+
-compatible.
+compatible. Also includes picklable, Python {2, 3}-compatible implementations
+of some related utilities, including some functions from the PyToolz_ library,
+in `picklable_itertools.extras`.
+
+.. _toolz: http://toolz.readthedocs.org/en/latest/
 
 Why?
 ----
