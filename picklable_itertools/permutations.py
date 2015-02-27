@@ -9,9 +9,9 @@ class IndexBased(BaseItertool):
     def __init__(self, iterable, r=None):
         self._pool = tuple(iterable)
         self._r = r if r is not None else len(self._pool)
-        self._iter = self._constructiter_()
+        self._iter = self._construct_iter()
 
-    def _constructiter_(self):
+    def _construct_iter(self):
         return product(range(len(self._pool)), repeat=self._r)
 
     @abstractmethod
@@ -63,5 +63,5 @@ class combinations(AbstractCombinations):
 
     combinations(range(4), 3) --> (0,1,2), (0,1,3), (0,2,3), (1,2,3)
     """
-    def _constructiter_(self):
+    def _construct_iter(self):
         return permutations(range(len(self._pool)), self._r)
