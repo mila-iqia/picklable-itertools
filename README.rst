@@ -4,7 +4,7 @@ picklable-itertools
 A reimplementation of the Python standard library's ``itertools``, in Python,
 using picklable iterator objects. Intended to be Python 2.7 and 3.4+
 compatible. Also includes picklable, Python {2, 3}-compatible implementations
-of some related utilities, including some functions from the PyToolz_ library,
+of some related utilities, including some functions from the Toolz_ library,
 in ``picklable_itertools.extras``.
 
 .. _PyToolz: http://toolz.readthedocs.org/en/latest/
@@ -27,7 +27,7 @@ Why?
 Philosophy
 ----------
 * *This should be a drop-in replacement.* Pretty self-explanatory. Test
-  against the standard library ```itertools``` or builtin implementation to
+  against the standard library ``itertools`` or builtin implementation to
   verify behaviour matches. Where Python 2 and Python 3 differ in their
   naming, (``filterfalse`` vs ``ifilterfalse``, ``zip_longest`` vs. ``izip_longest``)
   we provide both. We also provide names that were only available in the

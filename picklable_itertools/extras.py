@@ -1,7 +1,10 @@
 """Related things that aren't part of the standard library's `itertools`.
 
 Currently home to picklable reimplementations of a few of the generators
-from Matthew Rocklin's `toolz` package.
+from Matthew Rocklin's Toolz package.
+
+Docstrings for `partition` and `partition_all` are lifted wholesale
+from the Toolz documentation <http://toolz.readthedocs.org/en/latest/>.
 """
 import six
 from .base import BaseItertool
