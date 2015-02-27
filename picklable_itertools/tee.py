@@ -31,7 +31,7 @@ class tee_manager(object):
     """
     def __init__(self, iterable, n=2):
         self._iterable = iter_(iterable)
-        self._tee_iterators = [tee_iterator(self) for i in range(n)]
+        self._tee_iterators = tuple(tee_iterator(self) for i in range(n))
 
     def iterators(self):
         return list(self._tee_iterators)

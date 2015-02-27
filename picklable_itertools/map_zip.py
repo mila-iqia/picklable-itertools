@@ -10,7 +10,7 @@ class imap(BaseItertool):
     """
     def __init__(self, function, *iterables):
         self._function = function
-        self._iterables = tuple([iter_(it) for it in iterables])
+        self._iterables = tuple(iter_(it) for it in iterables)
 
     def _run(self, args):
         return self._function(*args)
@@ -69,7 +69,7 @@ class izip_longest(BaseItertool):
             raise ValueError("Unrecognized keyword arguments: {}".format(
                 ", ".join(kwargs)))
 
-        self._iterables = [iter_(it) for it in iterables]
+        self._iterables = tuple(iter_(it) for it in iterables)
 
     def __next__(self):
         found_any = False

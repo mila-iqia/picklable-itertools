@@ -36,8 +36,8 @@ class product(BaseItertool):
         if repeat is not None:
             self._iterables = sum(_zip(*(tee(it, repeat) for it in args)), ())
         else:
-            self._iterables = [iter_(it) for it in args]
-        self._contents = [[] for it in self._iterables]
+            self._iterables = tuple(iter_(it) for it in args)
+        self._contents = tuple([] for it in self._iterables)
         self._exhausted = [False for it in self._iterables]
         self._position = [-1 for it in self._iterables]
         self._initialized = False
