@@ -1,20 +1,20 @@
 picklable-itertools
 ===================
 
-A reimplementation of the Python standard library's `itertools`, in Python,
+A reimplementation of the Python standard library's ``itertools``, in Python,
 using picklable iterator objects. Intended to be Python 2.7 and 3.4+
 compatible. Also includes picklable, Python {2, 3}-compatible implementations
 of some related utilities, including some functions from the PyToolz_ library,
-in `picklable_itertools.extras`.
+in ``picklable_itertools.extras``.
 
 .. _PyToolz: http://toolz.readthedocs.org/en/latest/
 
 Why?
 ----
 * Because the standard library pickle module (nor the excellent dill_ package)
-  can't serialize all of the `itertools` iterators, at least on Python 2
+  can't serialize all of the ``itertools`` iterators, at least on Python 2
   (at least some appear to be serializable on Python 3).
-* Because there are lots of instances where these things in `itertools` would
+* Because there are lots of instances where these things in ``itertools`` would
   simplify code, but can't be used because serializability must be maintained
   across both Python 2 and Python 3.  The in-development framework Blocks_ is
   our first consumer. We'd like to be able to serialize the entire state of a
@@ -27,21 +27,21 @@ Why?
 Philosophy
 ----------
 * *This should be a drop-in replacement.* Pretty self-explanatory. Test
-  against the standard library ``itertools`` or builtin implementation to
+  against the standard library ```itertools``` or builtin implementation to
   verify behaviour matches. Where Python 2 and Python 3 differ in their
-  naming, (`filterfalse` vs `ifilterfalse`, `zip_longest` vs. `izip_longest`)
+  naming, (``filterfalse`` vs ``ifilterfalse``, ``zip_longest`` vs. ``izip_longest``)
   we provide both. We also provide names that were only available in the
-  Python 2 incarnation of `itertools` (`ifilter`, `izip`), also available
-  under their built-in names in Python 3 (`filter`, `zip`), for convenience.
-  As new objects are added to the Python 3 `itertools` module, we intend
-  to add them (`accumulate`, for example, appears only in Python 3, and a
+  Python 2 incarnation of ``itertools`` (``ifilter``, ``izip``), also available
+  under their built-in names in Python 3 (``filter``, ``zip``), for convenience.
+  As new objects are added to the Python 3 ``itertools`` module, we intend
+  to add them (``accumulate``, for example, appears only in Python 3, and a
   picklable implementation is contained in this package.)
 * *Handle built-in types gracefully if possible.* List iterators, etc.
   are not picklable on Python 2.x, so we provide an alternative
   implementation. File iterators are handled transparently as well. dict
   iterators and set iterators are currently *not* supported.
-  `picklable_itertools.xrange` can be used as a drop-in replacement for
-  Python 2 `xrange`/Python 3 `range`, with the benefit that the iterators
+  ``picklable_itertools.xrange`` can be used as a drop-in replacement for
+  Python 2 ``xrange``/Python 3 ``range``, with the benefit that the iterators
   produced by it will be picklable on both Python 2 and 3.
 * *Premature optimization is the root of all evil.* These things are
   implemented in Python, so speed is obviously not our primary concern. Several
