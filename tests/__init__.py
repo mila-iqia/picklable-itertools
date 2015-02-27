@@ -12,7 +12,7 @@ from unittest import SkipTest
 
 from picklable_itertools import (
     repeat, chain, compress, count, cycle, ifilter, ifilterfalse, imap, izip,
-    file_iterator, ordered_sequence_iterator, izip_longest, _iter, islice,
+    file_iterator, ordered_sequence_iterator, izip_longest, iter_, islice,
     range_iterator, product, tee, accumulate, takewhile, dropwhile, starmap,
     groupby, permutations, combinations, combinations_with_replacement,
     xrange as _xrange
@@ -92,15 +92,15 @@ def test_ordered_sequence_iterator():
 
 def test_dict_iterator():
     d = {'a': 'b', 1: 2}
-    assert list(_iter(d)) == list(iter(d))
-    assert list(_iter(d.items())) == list(iter(d.items()))
-    assert list(_iter(d.keys())) == list(iter(d.keys()))
-    assert list(_iter(d.values())) == list(iter(d.values()))
+    assert list(iter_(d)) == list(iter(d))
+    assert list(iter_(d.items())) == list(iter(d.items()))
+    assert list(iter_(d.keys())) == list(iter(d.keys()))
+    assert list(iter_(d.values())) == list(iter(d.values()))
 
-    yield verify_pickle, _iter, iter, 2, 1, d
-    yield verify_pickle, _iter, iter, 2, 1, d.items()
-    yield verify_pickle, _iter, iter, 2, 1, d.values()
-    yield verify_pickle, _iter, iter, 2, 1, d.keys()
+    yield verify_pickle, iter_, iter, 2, 1, d
+    yield verify_pickle, iter_, iter, 2, 1, d.items()
+    yield verify_pickle, iter_, iter, 2, 1, d.values()
+    yield verify_pickle, iter_, iter, 2, 1, d.keys()
 
 
 def test_range_iterator():
@@ -136,7 +136,7 @@ def test_file_iterator():
 
 def test_file_iterator_pickling():
     f = _create_test_file()
-    it = _iter(open(f.name))
+    it = iter_(open(f.name))
     last = [next(it) for _ in range(2)][-1]
     first = next(cPickle.loads(cPickle.dumps(it)))
     assert int(first) == int(last) + 1

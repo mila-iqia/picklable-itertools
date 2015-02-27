@@ -1,6 +1,6 @@
 import collections
 from .base import BaseItertool
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 
 
 class repeat(BaseItertool):
@@ -34,14 +34,14 @@ class chain(BaseItertool):
     iterable, until all of the iterables are exhausted.
     """
     def __init__(self, *iterables):
-        self._iterables = _iter(iterables)
+        self._iterables = iter_(iterables)
         self._current = repeat(None, 0)
 
     def __next__(self):
         try:
             return next(self._current)
         except StopIteration:
-            self._current = _iter(next(self._iterables))
+            self._current = iter_(next(self._iterables))
         return next(self)
 
     @classmethod
@@ -58,8 +58,8 @@ class compress(BaseItertool):
     selectors to choose the data elements.
     """
     def __init__(self, data, selectors):
-        self._data = _iter(data)
-        self._selectors = _iter(selectors)
+        self._data = iter_(data)
+        self._selectors = iter_(selectors)
 
     def __next__(self):
         # We terminate on the shortest input sequence, so leave
@@ -94,7 +94,7 @@ class cycle(BaseItertool):
     Then repeat the sequence indefinitely.
     """
     def __init__(self, iterable):
-        self._iterable = _iter(iterable)
+        self._iterable = iter_(iterable)
         self._exhausted = False
         self._elements = collections.deque()
 
@@ -120,7 +120,7 @@ class accumulate(BaseItertool):
     Return series of accumulated sums (or other binary function results).
     """
     def __init__(self, iterable, func=None):
-        self._iter = _iter(iterable)
+        self._iter = iter_(iterable)
         self._func = func
         self._initialized = False
         self._accumulated = None

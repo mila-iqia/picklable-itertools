@@ -5,7 +5,7 @@ from Matthew Rocklin's `toolz` package.
 """
 import six
 from .base import BaseItertool
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 
 
 class partition(BaseItertool):
@@ -59,7 +59,7 @@ class partition_all(BaseItertool):
     """
     def __init__(self, n, seq):
         self._n = n
-        self._seq = _iter(seq)
+        self._seq = iter_(seq)
 
     def __next__(self):
         items = []

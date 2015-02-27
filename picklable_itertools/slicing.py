@@ -1,7 +1,7 @@
 import sys
 
 from .base import BaseItertool
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 
 
 class islice(BaseItertool):
@@ -24,7 +24,7 @@ class islice(BaseItertool):
             raise ValueError("Indices for islice() must be None or an "
                              "integer: 0 <= x <= maxint.")
 
-        self._iterable = _iter(iterable)
+        self._iterable = iter_(iterable)
         i = 0
         while i < start:
             try:

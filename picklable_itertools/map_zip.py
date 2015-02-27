@@ -1,5 +1,5 @@
 from .base import BaseItertool
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 
 
 class imap(BaseItertool):
@@ -10,7 +10,7 @@ class imap(BaseItertool):
     """
     def __init__(self, function, *iterables):
         self._function = function
-        self._iterables = tuple([_iter(it) for it in iterables])
+        self._iterables = tuple([iter_(it) for it in iterables])
 
     def _run(self, args):
         return self._function(*args)
@@ -30,7 +30,7 @@ class starmap(imap):
     with a argument tuple taken from the given sequence.
     """
     def __init__(self, function, iterable):
-        self._iterables = (_iter(iterable),)
+        self._iterables = (iter_(iterable),)
         self._function = function
 
     def _run(self, args):
@@ -69,7 +69,7 @@ class izip_longest(BaseItertool):
             raise ValueError("Unrecognized keyword arguments: {}".format(
                 ", ".join(kwargs)))
 
-        self._iterables = [_iter(it) for it in iterables]
+        self._iterables = [iter_(it) for it in iterables]
 
     def __next__(self):
         found_any = False

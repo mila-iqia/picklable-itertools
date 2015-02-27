@@ -4,7 +4,7 @@ import six
 from .base import BaseItertool
 
 
-def _iter(obj):
+def iter_(obj):
     """A custom replacement for iter(), dispatching a few custom picklable
     iterators for known types.
     """

@@ -1,7 +1,7 @@
 """Support code for implementing `tee`."""
 import collections
 import six
-from picklable_itertools import _iter
+from picklable_itertools import iter_
 
 
 class tee_iterator(six.Iterator):
@@ -30,7 +30,7 @@ class tee_manager(object):
     one or more client `tee_iterators`.
     """
     def __init__(self, iterable, n=2):
-        self._iterable = _iter(iterable)
+        self._iterable = iter_(iterable)
         self._tee_iterators = [tee_iterator(self) for i in range(n)]
 
     def iterators(self):
@@ -45,4 +45,4 @@ class tee_manager(object):
 
 def tee(iterable, n=2):
     """tee(iterable, n=2) --> tuple of n independent iterators."""
-    return tee_manager(_iter(iterable), n=n).iterators()
+    return tee_manager(iter_(iterable), n=n).iterators()

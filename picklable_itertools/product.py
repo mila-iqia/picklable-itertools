@@ -1,7 +1,7 @@
 import collections
 
 from .base import BaseItertool
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 from .tee import tee
 _zip = zip
 
@@ -36,7 +36,7 @@ class product(BaseItertool):
         if repeat is not None:
             self._iterables = sum(_zip(*(tee(it, repeat) for it in args)), ())
         else:
-            self._iterables = [_iter(it) for it in args]
+            self._iterables = [iter_(it) for it in args]
         self._contents = [[] for it in self._iterables]
         self._exhausted = [False for it in self._iterables]
         self._position = [-1 for it in self._iterables]

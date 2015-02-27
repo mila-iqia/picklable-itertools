@@ -1,5 +1,5 @@
 from .base import BaseItertool
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 
 
 class _grouper(BaseItertool):
@@ -37,7 +37,7 @@ class groupby(BaseItertool):
     """
     def __init__(self, iterable, key=None):
         self._key = key
-        self._iterator = _iter(iterable)
+        self._iterator = iter_(iterable)
         self._current_key = self._initial_key = object()
 
     def _keyfunc(self, value):

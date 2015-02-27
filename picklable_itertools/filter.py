@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import six
-from .iter_dispatch import _iter
+from .iter_dispatch import iter_
 from .base import BaseItertool
 
 
@@ -8,7 +8,7 @@ from .base import BaseItertool
 class BaseFilter(BaseItertool):
     def __init__(self, pred, seq):
         self._predicate = pred
-        self._iter = _iter(seq)
+        self._iter = iter_(seq)
 
     @abstractmethod
     def __next__(self):
