@@ -13,8 +13,8 @@ setup(
     description='itertools. But picklable.',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/dwf/picklable_itertools',
-    author='David Wade-Farley',
-    author_email='d.wade.farley@gmail.com',
+    author='David Warde-Farley',
+    author_email='d.warde.farley@gmail.com',
     license='MIT',
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
