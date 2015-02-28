@@ -9,7 +9,7 @@ def iter_(obj):
     iterators for known types.
     """
     if six.PY2:
-        file_types = file,
+        file_types = file,  # noqa
     if six.PY3:
         file_types = io.IOBase,
         dict_items = {}.items().__class__
@@ -24,7 +24,7 @@ def iter_(obj):
     if six.PY2:
         if isinstance(obj, (list, tuple)):
             return ordered_sequence_iterator(obj)
-        if isinstance(obj, xrange):
+        if isinstance(obj, xrange):  # noqa
             return range_iterator(obj)
     if six.PY3 and isinstance(obj, dict_view):
         return ordered_sequence_iterator(list(obj))
