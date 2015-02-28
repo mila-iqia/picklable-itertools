@@ -11,8 +11,8 @@ from .map_zip import imap, starmap, izip, izip_longest
 from .permutations import (
     permutations, combinations, combinations_with_replacement
 )
-from .product import product
-from .range import xrange
+from .product import product  # noqa
+from .range import xrange  # noqa
 from .simple import accumulate, chain, compress, count, cycle, repeat
 from .slicing import islice
 from .tee import tee
