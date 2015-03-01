@@ -3,9 +3,9 @@ from .iter_dispatch import iter_
 
 
 class _grouper(BaseItertool):
-    def __init__(self, value, groupby):
+    def __init__(self, value, groupby_obj):
         self._value = value
-        self._groupby = groupby
+        self._groupby = groupby_obj
         self._key = self._groupby._keyfunc(self._value)
         self._initialized = False
         self._stream_ended = False
