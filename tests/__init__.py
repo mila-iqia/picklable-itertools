@@ -164,6 +164,19 @@ def test_chain():
     yield verify_same, chain, itertools.chain, None
 
 
+def test_chain_from_iterable():
+    yield (verify_same, chain.from_iterable, itertools.chain.from_iterable,
+           None, [xrange(i) for i in xrange(3)])
+    yield (verify_pickle, chain.from_iterable, itertools.chain.from_iterable,
+           5, 2, [xrange(i) for i in xrange(4)])
+    yield (verify_same, chain.from_iterable, itertools.chain.from_iterable,
+           None, [[1], [], [2]])
+    yield (verify_same, chain.from_iterable, itertools.chain.from_iterable,
+           None, [[], [], []])
+    yield (verify_same, chain.from_iterable, itertools.chain.from_iterable,
+           None, [[], [None], []])
+
+
 def test_compress():
     yield verify_same, compress, itertools.compress, None, [1, 2, 3], [1, 2, 3]
     yield verify_same, compress, itertools.compress, None, [1, 2, 3], [1, 0, 0]
