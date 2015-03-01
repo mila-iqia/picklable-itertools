@@ -3,11 +3,12 @@ from .iter_dispatch import iter_
 
 
 class _grouper(BaseItertool):
-    def __init__(self, value, groupby_obj):
+    def __init__(self, value, iterator, groupby_obj):
         self._value = value
         self._groupby = groupby_obj
         self._key = self._groupby.key(self._value)
         self._initialized = False
+        self._iterator = iterator
         self._stream_ended = False
         self._done = False
 
@@ -19,7 +20,7 @@ class _grouper(BaseItertool):
             if self._done:
                 raise StopIteration
             try:
-                value = next(self._groupby._iterator)
+                value = next(self._iterator)
             except StopIteration:
                 self._stream_ended = True
                 self._done = True
@@ -37,7 +38,7 @@ class groupby(BaseItertool):
     """
     def __init__(self, iterable, key=None):
         self._keyfunc = key
-        self._iterator = iter_(iterable)
+        self.iterator = iter_(iterable)
         self._current_key = self._initial_key = object()
 
     def key(self, value):
@@ -48,8 +49,8 @@ class groupby(BaseItertool):
 
     def __next__(self):
         if not hasattr(self, '_current_grouper'):
-            value = next(self._iterator)
-            self._current_grouper = _grouper(value, self)
+            value = next(self.iterator)
+            self._current_grouper = _grouper(value, self._iterator, self)
             return self.key(value), self._current_grouper
         else:
             while True:
