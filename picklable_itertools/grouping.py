@@ -9,7 +9,7 @@ class _grouper(BaseItertool):
         self._key = self._groupby.key(self._value)
         self._initialized = False
         self._iterator = iterator
-        self._stream_ended = False
+        self.stream_ended = False
         self._done = False
 
     def __next__(self):
@@ -22,11 +22,11 @@ class _grouper(BaseItertool):
             try:
                 value = next(self._iterator)
             except StopIteration:
-                self._stream_ended = True
+                self.stream_ended = True
                 self._done = True
                 raise
             if self._groupby.key(value) != self._key:
-                self._terminal_value = value
+                self.terminal_value = value
                 self._done = True
                 raise StopIteration
             return value
@@ -58,8 +58,8 @@ class groupby(BaseItertool):
                     next(self._current_grouper)
                 except StopIteration:
                     break
-            if self._current_grouper._stream_ended:
+            if self._current_grouper.stream_ended:
                 raise StopIteration
-            value = self._current_grouper._terminal_value
+            value = self._current_grouper.terminal_value
             self._current_grouper = _grouper(value, self)
             return self.key(value), self._current_grouper
