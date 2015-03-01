@@ -38,7 +38,7 @@ class groupby(BaseItertool):
     """
     def __init__(self, iterable, key=None):
         self._keyfunc = key
-        self.iterator = iter_(iterable)
+        self._iterator = iter_(iterable)
         self._current_key = self._initial_key = object()
 
     def key(self, value):
@@ -49,7 +49,7 @@ class groupby(BaseItertool):
 
     def __next__(self):
         if not hasattr(self, '_current_grouper'):
-            value = next(self.iterator)
+            value = next(self._iterator)
             self._current_grouper = _grouper(value, self._iterator, self)
             return self.key(value), self._current_grouper
         else:
@@ -61,5 +61,5 @@ class groupby(BaseItertool):
             if self._current_grouper.stream_ended:
                 raise StopIteration
             value = self._current_grouper.terminal_value
-            self._current_grouper = _grouper(value, self)
+            self._current_grouper = _grouper(value, self._iterator, self)
             return self.key(value), self._current_grouper
