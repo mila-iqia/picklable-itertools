@@ -346,8 +346,8 @@ def test_islice():
 def verify_tee(n, original, seed):
     try:
         state = random.getstate()
-        iterators = tee(original, n=n)
-        results = [[] for i in range(n)]
+        iterators = list(tee(original, n=n))
+        results = [[] for _ in range(n)]
         exhausted = [False] * n
         while not all(exhausted):
             # Upper argument of random.randint is inclusive. Argh.
