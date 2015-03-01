@@ -6,7 +6,7 @@ class _grouper(BaseItertool):
     def __init__(self, value, groupby_obj):
         self._value = value
         self._groupby = groupby_obj
-        self._key = self._groupby._keyfunc(self._value)
+        self._key = self._groupby.key(self._value)
         self._initialized = False
         self._stream_ended = False
         self._done = False
@@ -24,7 +24,7 @@ class _grouper(BaseItertool):
                 self._stream_ended = True
                 self._done = True
                 raise
-            if self._groupby._keyfunc(value) != self._key:
+            if self._groupby.key(value) != self._key:
                 self._terminal_value = value
                 self._done = True
                 raise StopIteration
@@ -36,21 +36,21 @@ class groupby(BaseItertool):
     (key, sub-iterator) grouped by each value of key(value).
     """
     def __init__(self, iterable, key=None):
-        self._key = key
+        self._keyfunc = key
         self._iterator = iter_(iterable)
         self._current_key = self._initial_key = object()
 
-    def _keyfunc(self, value):
-        if self._key is None:
+    def key(self, value):
+        if self._keyfunc is None:
             return value
         else:
-            return self._key(value)
+            return self._keyfunc(value)
 
     def __next__(self):
         if not hasattr(self, '_current_grouper'):
             value = next(self._iterator)
             self._current_grouper = _grouper(value, self)
-            return self._keyfunc(value), self._current_grouper
+            return self.key(value), self._current_grouper
         else:
             while True:
                 try:
@@ -61,4 +61,4 @@ class groupby(BaseItertool):
                 raise StopIteration
             value = self._current_grouper._terminal_value
             self._current_grouper = _grouper(value, self)
-            return self._keyfunc(value), self._current_grouper
+            return self.key(value), self._current_grouper
