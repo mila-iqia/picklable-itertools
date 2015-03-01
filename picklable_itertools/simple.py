@@ -47,7 +47,8 @@ class chain(BaseItertool):
     @classmethod
     def from_iterable(cls, iterable):
         obj = cls()
-        obj._iterables = iterable
+        obj._iterables = iter_(iterable)
+        return obj
 
 
 class compress(BaseItertool):
