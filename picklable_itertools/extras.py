@@ -67,7 +67,7 @@ class partition_all(BaseItertool):
     def __next__(self):
         items = []
         try:
-            for i in six.moves.xrange(self._n):
+            for _ in six.moves.xrange(self._n):
                 items.append(next(self._seq))
         except StopIteration:
             pass
