@@ -1,3 +1,15 @@
+.. image:: https://img.shields.io/coveralls/dwf/picklable_itertools.svg
+   :target: https://coveralls.io/r/dwf/picklable_itertools
+
+.. image:: https://travis-ci.org/dwf/picklable_itertools.svg?branch=master
+   :target: https://travis-ci.org/dwf/picklable_itertools
+
+.. image:: https://img.shields.io/scrutinizer/g/dwf/picklable_itertools.svg
+   :target: https://scrutinizer-ci.com/g/dwf/picklable_itertools/
+
+.. image:: https://img.shields.io/badge/license-MIT-blue.svg
+   :target: https://github.com/dwf/picklable_itertools/blob/master/LICENSE
+
 picklable-itertools
 ===================
 
