@@ -8,6 +8,7 @@ from the Toolz documentation <http://toolz.readthedocs.org/en/latest/>.
 """
 import six
 from .base import BaseItertool
+from .map_zip import izip_longest
 from .iter_dispatch import iter_
 
 
@@ -74,3 +75,29 @@ class partition_all(BaseItertool):
         if len(items) == 0:
             raise StopIteration
         return tuple(items)
+
+
+class NoMoreItems(object):
+    """Sentinel value for `equizip`. Do not use for any other purpose."""
+    pass
+
+
+class IterableLengthMismatch(ValueError):
+    """Raised if an iterator passed to `equizip` is shorter than others."""
+    pass
+
+
+class equizip(izip_longest):
+    """Like `izip_longest` but ensures the sequences are the same length.
+
+    Raises :class:`IterableLengthMismatch` if one of the iterators
+    terminates prematurely.
+    """
+    def __init__(self, *args):
+        super(equizip, self).__init__(*args, fillvalue=NoMoreItems)
+
+    def __next__(self):
+        next_item = super(equizip, self).__next__()
+        if NoMoreItems in next_item:
+            raise IterableLengthMismatch
+        return next_item

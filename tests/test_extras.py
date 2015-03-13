@@ -1,5 +1,8 @@
 from unittest import SkipTest
-from picklable_itertools.extras import partition, partition_all
+from nose.tools import assert_raises
+from six.moves import zip
+from picklable_itertools.extras import (partition, partition_all,
+                                        IterableLengthMismatch, equizip)
 
 from . import verify_same, verify_pickle
 
@@ -17,3 +20,10 @@ def test_partition():
         yield verify_same, obj, ref, None, 3, [5, 9, 2, 9, 2]
         yield verify_same, obj, ref, None, 3, [5, 9, 2, 9, 2]
         yield verify_pickle, obj, ref, 2, 1, 3, [5, 9, 2, 9, 2, 4, 3]
+
+
+def test_equizip():
+    yield verify_same, equizip, zip, None, [3, 4], [9, 2], [9, 9]
+    yield verify_same, equizip, zip, None, [3, 4, 8, 4, 2]
+    assert_raises(IterableLengthMismatch, list, equizip([5, 4, 3], [2, 1]))
+    assert_raises(IterableLengthMismatch, list, equizip([5, 4, 3], []))
