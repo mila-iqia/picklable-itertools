@@ -98,6 +98,6 @@ class equizip(izip_longest):
 
     def __next__(self):
         next_item = super(equizip, self).__next__()
-        if NoMoreItems in next_item:
+        if any(value is NoMoreItems for value in next_item):
             raise IterableLengthMismatch
         return next_item
