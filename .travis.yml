@@ -19,7 +19,7 @@ before_install:
   - conda update -q --yes conda
 install:
   # Install all Python dependencies
-  - conda install -q --yes python=$TRAVIS_PYTHON_VERSION pip coverage six toolz nose
+  - conda install -q --yes python=$TRAVIS_PYTHON_VERSION pip coverage six toolz nose numpy
   - pip install -q nose2[coverage-plugin] coveralls
 script:
   - rm -f .coverage
