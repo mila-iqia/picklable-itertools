@@ -17,6 +17,8 @@ from picklable_itertools import (
     groupby, permutations, combinations, combinations_with_replacement,
     xrange as _xrange
 )
+from picklable_itertools.iter_dispatch import numpy, NUMPY_AVAILABLE
+
 _map = map if six.PY3 else itertools.imap
 _zip = zip if six.PY3 else itertools.izip
 _zip_longest = itertools.zip_longest if six.PY3 else itertools.izip_longest
@@ -29,7 +31,15 @@ def _identity(x):
     return x
 
 
-def verify_same(picklable_version, reference_version, n, *args, **kwargs):
+def safe_assert_equal(expected_val, actual_val):
+    if NUMPY_AVAILABLE and (isinstance(expected_val, numpy.ndarray) or
+                            isinstance(actual_val, numpy.ndarray)):
+        assert (expected_val == actual_val).all()
+    else:
+        assert expected_val == actual_val
+
+
+def verify_same(picklable_version, reference_version, n, *args,  **kwargs):
     """Take a reference version from itertools, verify the same operation
     in our version.
     """
@@ -52,7 +62,7 @@ def verify_same(picklable_version, reference_version, n, *args, **kwargs):
         except StopIteration:
             assert False, "prematurely exhausted; expected {}".format(
                 str(expected_val))
-        assert expected_val == actual_val
+            safe_assert_equal(expected_val, actual_val)
         done += 1
 
 
@@ -66,10 +76,17 @@ def verify_pickle(picklable_version, reference_version, n, m, *args, **kwargs):
     while done != n:
         expected_val = next(expected)
         actual_val = next(actual)
-        assert expected_val == actual_val
+        safe_assert_equal(expected_val, actual_val)
         if done == m:
             actual = cPickle.loads(cPickle.dumps(actual))
         done += 1
+
+
+def conditional_run(condition, f, *args, **kwargs):
+    if condition:
+        f(*args, **kwargs)
+    else:
+        raise SkipTest
 
 
 def check_stops(it):
@@ -88,6 +105,23 @@ def test_ordered_sequence_iterator():
     yield verify_same, ordered_sequence_iterator, iter, None, ("D", "X", "J")
     yield verify_pickle, ordered_sequence_iterator, iter, 4, 3, [2, 9, 3, 4]
     yield verify_pickle, ordered_sequence_iterator, iter, 3, 2, ['a', 'c', 'b']
+    array = numpy.array if NUMPY_AVAILABLE else list
+    numpy_pickle_test = partial(conditional_run, NUMPY_AVAILABLE,
+                                verify_pickle)
+    numpy_same_test = partial(conditional_run, NUMPY_AVAILABLE, verify_same)
+    yield (numpy_same_test, ordered_sequence_iterator, iter, None,
+           array([4, 3, 9]))
+    yield (numpy_same_test, ordered_sequence_iterator, iter, None,
+           array([[4, 3, 9], [2, 9, 6]]))
+    yield (numpy_pickle_test, ordered_sequence_iterator, iter, 4, 3,
+           array([2, 9, 3, 4]))
+    yield (numpy_pickle_test, ordered_sequence_iterator, iter, 3, 2,
+           array([[2, 1], [2, 9], [9, 4], [3, 9]]))
+    # Make sure the range iterator is actually getting dispatched by iter_.
+    yield (numpy_pickle_test, iter_, iter, 4, 3,
+           array([2, 9, 3, 4]))
+    yield (numpy_pickle_test, iter_, iter, 3, 2,
+           array([[2, 1], [2, 9], [9, 4], [3, 9]]))
 
 
 def test_dict_iterator():

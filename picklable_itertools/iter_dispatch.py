@@ -1,6 +1,14 @@
 import io
 
 import six
+try:
+    import numpy
+    NUMPY_AVAILABLE = True
+except ImportError:
+    numpy = None
+    NUMPY_AVAILABLE = False
+
+
 from .base import BaseItertool
 
 
@@ -26,6 +34,8 @@ def iter_(obj):
             return ordered_sequence_iterator(obj)
         if isinstance(obj, xrange):  # noqa
             return range_iterator(obj)
+        if NUMPY_AVAILABLE and isinstance(obj, numpy.ndarray):
+            return ordered_sequence_iterator(obj)
     if six.PY3 and isinstance(obj, dict_view):
         return ordered_sequence_iterator(list(obj))
     return iter(obj)
