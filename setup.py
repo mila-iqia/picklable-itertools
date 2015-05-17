@@ -9,8 +9,8 @@ with open(path.join(HERE, 'README.rst')) as f:
 
 setup(
     name='picklable-itertools',
-    version='0.0.1',  # PEP 440 compliant
-    description='itertools. But picklable.',
+    version='0.1.0',  # PEP 440 compliant
+    description='itertools. But picklable. Even on Python 2.',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/dwf/picklable_itertools',
     author='David Warde-Farley',
@@ -31,4 +31,4 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=['six'],
     zip_safe=True
-    )
+)
