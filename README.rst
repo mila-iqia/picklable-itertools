@@ -19,7 +19,7 @@ compatible. Also includes picklable, Python {2, 3}-compatible implementations
 of some related utilities, including some functions from the Toolz_ library,
 in ``picklable_itertools.extras``.
 
-.. _PyToolz: http://toolz.readthedocs.org/en/latest/
+.. _Toolz: http://toolz.readthedocs.org/en/latest/
 
 Why?
 ----
