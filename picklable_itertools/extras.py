@@ -3,12 +3,13 @@
 Currently home to picklable reimplementations of a few of the generators
 from Matthew Rocklin's Toolz package.
 
-Docstrings for `partition` and `partition_all` are lifted wholesale
-from the Toolz documentation <http://toolz.readthedocs.org/en/latest/>.
+Docstrings for `partition`, `partition_all`, and 'interleave' are lifted
+wholesale from the Toolz documentation
+<http://toolz.readthedocs.org/en/latest/>.
 """
 import six
 from .base import BaseItertool
-from .map_zip import izip_longest
+from .map_zip import imap, izip_longest
 from .iter_dispatch import iter_
 
 
@@ -101,3 +102,52 @@ class equizip(izip_longest):
         if any(value is NoMoreItems for value in next_item):
             raise IterableLengthMismatch
         return next_item
+
+
+class interleave(BaseItertool):
+    """Interleave a sequence of sequences
+
+    >>> list(interleave([[1, 2], [3, 4]]))
+    [1, 3, 2, 4]
+
+    >>> ''.join(interleave(('ABC', 'XY')))
+    'AXBYC'
+
+    Both the individual sequences and the sequence of sequences may be infinite
+
+    Returns a lazy iterator
+    """
+    def __init__(self, iterables, pass_exceptions=()):
+        self._iters = imap(iter, iterables)
+        self._more = []
+        self._pass_exceptions = pass_exceptions
+
+    def __next__(self):
+        try:
+            it = next(self._iters)
+        except StopIteration:
+            if len(self._more) == 0:
+                raise
+            else:
+                self._iters = imap(iter, self._more)
+                self._more = []
+                return next(self)
+        try:
+            result = next(it)
+            self._more.append(it)
+            return result
+        except (StopIteration,) + tuple(self._pass_exceptions):
+            return next(self)
+
+
+def roundrobin(*iterables):
+    """Grab items from a collection of iterators in a round ro bin
+    fashion until all are exhausted.
+
+    >>> list(roundrobin('ABC', 'DEF', 'GH'))
+    ['A', 'D', 'G', 'B', 'E', 'H', 'C', 'F']
+    >>> list(roundrobin(xrange(2), xrange(5, 10), xrange(10, 12)))
+    [0, 5, 10, 1, 6, 11, 7, 8, 9]
+
+    """
+    return interleave(iterables)

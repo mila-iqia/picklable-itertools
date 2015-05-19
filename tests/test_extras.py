@@ -2,7 +2,8 @@ from unittest import SkipTest
 from nose.tools import assert_raises
 from six.moves import zip
 from picklable_itertools.extras import (partition, partition_all,
-                                        IterableLengthMismatch, equizip)
+                                        IterableLengthMismatch, equizip,
+                                        interleave, roundrobin)
 
 from . import verify_same, verify_pickle
 
@@ -27,3 +28,26 @@ def test_equizip():
     yield verify_same, equizip, zip, None, [3, 4, 8, 4, 2]
     assert_raises(IterableLengthMismatch, list, equizip([5, 4, 3], [2, 1]))
     assert_raises(IterableLengthMismatch, list, equizip([5, 4, 3], []))
+
+
+def test_roundrobin():
+    assert list(roundrobin('ABC', 'D', 'EF')) == list('ADEBFC')
+    assert (list(roundrobin('ABCDEF', 'JK', 'GHI', 'L')) ==
+            list('AJGLBKHCIDEF'))
+
+
+def test_interleave():
+    assert list(interleave(['ABC', 'D', 'EF'])) == list('ADEBFC')
+    assert (list(interleave(['ABCDEF', 'JK', 'GHI', 'L'])) ==
+            list('AJGLBKHCIDEF'))
+
+    class StupidException(Exception):
+        pass
+
+    def stupid_gen():
+        yield 'A'
+        yield 'B'
+        raise StupidException
+
+    assert (list(interleave(['ABCDEF', stupid_gen()], [StupidException])) ==
+            list('AABBCDEF'))

@@ -9,7 +9,7 @@ with open(path.join(HERE, 'README.rst')) as f:
 
 setup(
     name='picklable-itertools',
-    version='0.1.0',  # PEP 440 compliant
+    version='0.1.1a0',  # PEP 440 compliant
     description='itertools. But picklable. Even on Python 2.',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/dwf/picklable_itertools',
