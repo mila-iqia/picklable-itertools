@@ -101,3 +101,31 @@ class equizip(izip_longest):
         if any(value is NoMoreItems for value in next_item):
             raise IterableLengthMismatch
         return next_item
+
+
+class roundrobin(BaseItertool):
+    """Grab items from a collection of iterators in a round ro bin
+    fashion until all are exhausted.
+
+    >>> list(roundrobin('ABC', 'DEF', 'GH'))
+    ['A', 'D', 'G', 'B', 'E', 'H', 'C', 'F']
+    >>> list(roundrobin(xrange(2), xrange(5, 10), xrange(10, 12)))
+    [0, 5, 10, 1, 6, 11, 7, 8, 9]
+
+    """
+    def __init__(self, *iterables):
+        self._iterables = [iter(it) for it in iterables]
+        self._next_iter = 0
+
+    def __next__(self):
+        if len(self._iterables) == 0:
+            raise StopIteration
+        try:
+            result = next(self._iterables[self._next_iter])
+            self._next_iter = (self._next_iter + 1) % len(self._iterables)
+            return result
+        except StopIteration:
+            del self._iterables[self._next_iter]
+            if self._next_iter >= len(self._iterables):
+                self._next_iter = 0
+            return next(self)
