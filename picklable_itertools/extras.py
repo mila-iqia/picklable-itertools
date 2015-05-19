@@ -3,12 +3,13 @@
 Currently home to picklable reimplementations of a few of the generators
 from Matthew Rocklin's Toolz package.
 
-Docstrings for `partition` and `partition_all` are lifted wholesale
-from the Toolz documentation <http://toolz.readthedocs.org/en/latest/>.
+Docstrings for `partition`, `partition_all`, and 'interleave' are lifted
+wholesale from the Toolz documentation
+<http://toolz.readthedocs.org/en/latest/>.
 """
 import six
 from .base import BaseItertool
-from .map_zip import izip_longest
+from .map_zip import imap, izip_longest
 from .iter_dispatch import iter_
 
 
@@ -103,7 +104,43 @@ class equizip(izip_longest):
         return next_item
 
 
-class roundrobin(BaseItertool):
+class interleave(BaseItertool):
+    """Interleave a sequence of sequences
+
+    >>> list(interleave([[1, 2], [3, 4]]))
+    [1, 3, 2, 4]
+
+    >>> ''.join(interleave(('ABC', 'XY')))
+    'AXBYC'
+
+    Both the individual sequences and the sequence of sequences may be infinite
+
+    Returns a lazy iterator
+    """
+    def __init__(self, iterables, pass_exceptions=()):
+        self._iters = imap(iter, iterables)
+        self._more = []
+        self._pass_exceptions = pass_exceptions
+
+    def __next__(self):
+        try:
+            it = next(self._iters)
+        except StopIteration:
+            if len(self._more) == 0:
+                raise
+            else:
+                self._iters = imap(iter, self._more)
+                self._more = []
+                return next(self)
+        try:
+            result = next(it)
+            self._more.append(it)
+            return result
+        except (StopIteration,) + tuple(self._pass_exceptions):
+            return next(self)
+
+
+def roundrobin(*iterables):
     """Grab items from a collection of iterators in a round ro bin
     fashion until all are exhausted.
 
@@ -113,19 +150,4 @@ class roundrobin(BaseItertool):
     [0, 5, 10, 1, 6, 11, 7, 8, 9]
 
     """
-    def __init__(self, *iterables):
-        self._iterables = [iter(it) for it in iterables]
-        self._next_iter = 0
-
-    def __next__(self):
-        if len(self._iterables) == 0:
-            raise StopIteration
-        try:
-            result = next(self._iterables[self._next_iter])
-            self._next_iter = (self._next_iter + 1) % len(self._iterables)
-            return result
-        except StopIteration:
-            del self._iterables[self._next_iter]
-            if self._next_iter >= len(self._iterables):
-                self._next_iter = 0
-            return next(self)
+    return interleave(iterables)

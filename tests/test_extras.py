@@ -3,7 +3,7 @@ from nose.tools import assert_raises
 from six.moves import zip
 from picklable_itertools.extras import (partition, partition_all,
                                         IterableLengthMismatch, equizip,
-                                        roundrobin)
+                                        interleave, roundrobin)
 
 from . import verify_same, verify_pickle
 
@@ -34,3 +34,20 @@ def test_roundrobin():
     assert list(roundrobin('ABC', 'D', 'EF')) == list('ADEBFC')
     assert (list(roundrobin('ABCDEF', 'JK', 'GHI', 'L')) ==
             list('AJGLBKHCIDEF'))
+
+
+def test_interleave():
+    assert list(interleave(['ABC', 'D', 'EF'])) == list('ADEBFC')
+    assert (list(interleave(['ABCDEF', 'JK', 'GHI', 'L'])) ==
+            list('AJGLBKHCIDEF'))
+
+    class StupidException(Exception):
+        pass
+
+    def stupid_gen():
+        yield 'A'
+        yield 'B'
+        raise StupidException
+
+    assert (list(interleave(['ABCDEF', stupid_gen()], [StupidException])) ==
+            list('AABBCDEF'))
