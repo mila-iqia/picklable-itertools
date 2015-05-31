@@ -12,7 +12,7 @@ setup(
     version='0.1.1a0',  # PEP 440 compliant
     description='itertools. But picklable. Even on Python 2.',
     long_description=LONG_DESCRIPTION,
-    url='https://github.com/dwf/picklable_itertools',
+    url='https://github.com/mila-udem/picklable_itertools',
     author='David Warde-Farley',
     author_email='d.warde.farley@gmail.com',
     license='MIT',
