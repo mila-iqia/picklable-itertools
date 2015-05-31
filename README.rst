@@ -1,14 +1,14 @@
-.. image:: https://img.shields.io/coveralls/mila-udem/picklable_itertools.svg
-   :target: https://coveralls.io/r/mila-udem/picklable_itertools
+.. image:: https://img.shields.io/coveralls/mila-udem/picklable-itertools.svg
+   :target: https://coveralls.io/r/mila-udem/picklable-itertools
 
-.. image:: https://travis-ci.org/mila-udem/picklable_itertools.svg?branch=master
-   :target: https://travis-ci.org/mila-udem/picklable_itertools
+.. image:: https://travis-ci.org/mila-udem/picklable-itertools.svg?branch=master
+   :target: https://travis-ci.org/mila-udem/picklable-itertools
 
-.. image:: https://img.shields.io/scrutinizer/g/mila-udem/picklable_itertools.svg
-   :target: https://scrutinizer-ci.com/g/mila-udem/picklable_itertools/
+.. image:: https://img.shields.io/scrutinizer/g/mila-udem/picklable-itertools.svg
+   :target: https://scrutinizer-ci.com/g/mila-udem/picklable-itertools/
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: https://github.com/mila-udem/picklable_itertools/blob/master/LICENSE
+   :target: https://github.com/mila-udem/picklable-itertools/blob/master/LICENSE
 
 picklable-itertools
 ===================
