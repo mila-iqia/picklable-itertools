@@ -141,7 +141,7 @@ class interleave(BaseItertool):
 
 
 def roundrobin(*iterables):
-    """Grab items from a collection of iterators in a round ro bin
+    """Grab items from a collection of iterators in a round robin
     fashion until all are exhausted.
 
     >>> list(roundrobin('ABC', 'DEF', 'GH'))
